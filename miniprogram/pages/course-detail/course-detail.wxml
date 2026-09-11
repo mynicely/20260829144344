@@ -1,0 +1,135 @@
+<view class="page-paper" wx:if="{{course}}">
+  <!-- 顶部大图 -->
+  <view class="cover-wrap" bindtap="onCoverTap">
+    <image class="cover-img" wx:if="{{covers.length}}" src="{{covers[curCover % covers.length]}}" mode="aspectFill" />
+    <view class="cover-fallback font-art" wx:else>书</view>
+    <view class="cover-dots" wx:if="{{covers.length > 1}}">
+      <view class="cover-dot {{index === curCover % covers.length ? 'cover-dot-active' : ''}}"
+        wx:for="{{covers}}" wx:key="*this"></view>
+    </view>
+    <seal-tag class="cover-level" status="{{course.level}}" wx:if="{{course.levelTag}}" />
+  </view>
+
+  <!-- 价格区 -->
+  <view class="card price-card">
+    <view class="row-between">
+      <view class="course-title font-art">{{course.title}}</view>
+    </view>
+    <view class="course-sub" wx:if="{{course.subtitle}}">{{course.subtitle}}</view>
+    <view class="price-row row">
+      <view class="pay-price">¥{{course.price}}</view>
+      <view class="price-through" wx:if="{{course.original_price}}">原价 ¥{{course.original_price}}</view>
+    </view>
+    <view class="coupon-row" wx:if="{{couponBalance > 0}}">
+      <text class="coupon-label">可抵扣「抵现金」余额</text>
+      <text class="coupon-value">¥{{couponBalance}}</text>
+    </view>
+  </view>
+
+  <!-- 模块分区：课程介绍 -->
+  <view class="section">
+    <view class="section-title font-art">课程介绍</view>
+    <view class="section-seal"></view>
+  </view>
+  <view class="card rich-text" wx:if="{{course.description}}">
+    <text user-select>{{course.description}}</text>
+  </view>
+
+  <!-- 模块分区：讲师介绍 -->
+  <view class="section">
+    <view class="section-title font-art">讲师介绍</view>
+    <view class="section-seal"></view>
+  </view>
+  <view class="card teacher-card" wx:if="{{course.teacher}}">
+    <view class="teacher-name font-art">{{course.teacher}}</view>
+    <view class="rich-text"><text user-select>{{course.teacher_intro}}</text></view>
+  </view>
+
+  <!-- 模块分区：课程大纲 -->
+  <view class="section">
+    <view class="section-title font-art">课程大纲</view>
+    <view class="section-seal"></view>
+  </view>
+  <view class="card chapter-card" wx:if="{{chapters.length}}">
+    <view class="chapter-item" wx:for="{{chapters}}" wx:key="id">
+      <view class="chapter-index font-art">{{index + 1}}</view>
+      <view class="chapter-name">{{item.title}}</view>
+    </view>
+  </view>
+
+  <!-- 模块分区：常见 FAQ -->
+  <view class="section" wx:if="{{faq.length}}">
+    <view class="section-title font-art">常见问题</view>
+    <view class="section-seal"></view>
+  </view>
+  <view class="card faq-card" wx:for="{{faq}}" wx:key="q">
+    <view class="faq-q font-art">{{item.q}}</view>
+    <view class="faq-a">{{item.a}}</view>
+  </view>
+
+  <!-- 评价列表（简版） -->
+  <view class="section" wx:if="{{reviews.length}}">
+    <view class="section-title font-art">学员评价</view>
+    <view class="section-seal"></view>
+  </view>
+  <view class="card review-item" wx:for="{{reviews}}" wx:key="id">
+    <view class="review-head row">
+      <text class="review-user">{{item.nickname || '学员'}}</text>
+      <text class="review-stars">{{item.stars}}</text>
+    </view>
+    <view class="rich-text"><text user-select>{{item.content}}</text></view>
+  </view>
+
+  <!-- 底部合规小字（评审要求，不允许删除） -->
+  <view class="compliance">{{compliance}}</view>
+
+  <!-- 底部操作栏 -->
+  <view class="bottom-bar">
+    <view class="bottom-btn bottom-btn-ghost" bindtap="goGroup">发起拼团</view>
+    <view class="bottom-btn bottom-btn-ghost" bindtap="goBargain">发起砍价</view>
+    <view class="bottom-btn bottom-btn-main {{buying ? 'disabled' : ''}}" bindtap="onBuyTap">
+      {{buying ? '处理中...' : '立即报名'}}
+    </view>
+  </view>
+  <view class="safe-bottom"></view>
+
+  <!-- 二选一弹窗（仅美化 UI，业务 JS 与 web 端一致） -->
+  <gf-modal visible="{{showIdentity}}" title="选择购课方式" showCancel="{{false}}" confirmText="暂不参与"
+    bind:cancel="onConfirmForgo" bind:confirm="onConfirmForgo">
+    <view class="choose-list">
+      <view class="choose-card" bindtap="onChooseShare">
+        <view class="choose-title row">
+          <text class="choose-icon font-art">奖</text>
+          <text class="choose-name">参与分享有奖</text>
+        </view>
+        <view class="choose-desc">本订单可获得分享奖励，可开通分享推广身份</view>
+        <view class="choose-seal font-art">荐</view>
+      </view>
+      <view class="choose-card" bindtap="onConfirmForgo">
+        <view class="choose-title row">
+          <text class="choose-icon choose-icon-plain font-art">学</text>
+          <text class="choose-name">放弃本单分享奖励</text>
+        </view>
+        <view class="choose-desc">仅购买课程，本单不产生任何分享奖励</view>
+      </view>
+    </view>
+  </gf-modal>
+
+  <!-- 参与分享有奖二次确认 -->
+  <gf-modal visible="{{showConfirm}}" title="确认参与分享有奖"
+    content="确认参与后，本订单将完整执行分享奖励逻辑，可开通/更新分享推广身份。\n（放弃仅针对当前这一笔订单）"
+    confirmText="确认参与" cancelText="再想想" bind:confirm="onConfirmShareJoin" bind:cancel="onConfirmForgo" />
+
+  <!-- 线下收款信息弹窗（manual 模式） -->
+  <gf-modal visible="{{payModalVisible}}" title="线下转账付款" confirmText="我已转账，等待开通" showCancel="{{false}}"
+    bind:confirm="closePayModal">
+    <view class="pay-info">
+      <view class="pay-amount">应付金额 <text class="price">¥{{payAmount}}</text></view>
+      <view class="pay-line" wx:if="{{receiveInfo.wechatAccount}}">微信收款：{{receiveInfo.wechatAccount}}</view>
+      <view class="pay-line" wx:if="{{receiveInfo.alipayAccount}}">支付宝：{{receiveInfo.alipayAccount}}</view>
+      <view class="pay-line" wx:if="{{receiveInfo.bankName}}">银行：{{receiveInfo.bankName}} {{receiveInfo.bankAccount}}（{{receiveInfo.bankHolder}}）</view>
+      <view class="pay-tip" wx:if="{{receiveInfo.notice}}">{{receiveInfo.notice}}</view>
+      <view class="pay-tip">转账后请等待管理员确认到账，确认后自动开通课程</view>
+    </view>
+  </gf-modal>
+</view>

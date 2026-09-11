@@ -1,0 +1,6 @@
+<view class="gf-btn gf-btn-{{type}} gf-btn-{{size}} {{disabled || loading ? 'gf-btn-disabled' : ''}}"
+  bindtap="onTap" hover-class="gf-btn-hover">
+  <view wx:if="{{loading}}" class="gf-btn-loading"></view>
+  <text>{{text}}</text>
+  <slot></slot>
+</view>

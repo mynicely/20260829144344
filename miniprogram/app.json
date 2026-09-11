@@ -1,0 +1,42 @@
+{
+  "pages": [
+    "pages/home/home",
+    "pages/course-detail/course-detail",
+    "pages/group/group",
+    "pages/group-detail/group-detail",
+    "pages/bargain/bargain",
+    "pages/bargain-detail/bargain-detail",
+    "pages/lesson/lesson",
+    "pages/task/task",
+    "pages/my-homework/my-homework",
+    "pages/practice/practice",
+    "pages/practice-quiz/practice-quiz",
+    "pages/practice-result/practice-result",
+    "pages/practice-wrong/practice-wrong",
+    "pages/invite/invite",
+    "pages/mine/mine",
+    "pages/hatch-progress/hatch-progress",
+    "pages/trainee-status/trainee-status",
+    "pages/income-list/income-list",
+    "pages/posts/posts",
+    "pages/post-detail/post-detail",
+    "pages/post-edit/post-edit",
+    "pages/rules/rules",
+    "pages/reserve/reserve",
+    "pages/login/login",
+    "pages/orders/orders",
+    "pages/withdrawals/withdrawals",
+    "pages/coupon-flows/coupon-flows",
+    "pages/checkins/checkins"
+  ],
+  "window": {
+    "navigationBarBackgroundColor": "#F8F5F0",
+    "navigationBarTitleText": "翰墨书院",
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "#F8F5F0",
+    "backgroundTextStyle": "dark"
+  },
+  "style": "v2",
+  "lazyCodeLoading": "requiredComponents",
+  "sitemapLocation": "sitemap.json"
+}

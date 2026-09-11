@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "题库练习",
+  "usingComponents": {
+    "gf-button": "/components/gf-button/gf-button",
+    "empty-state": "/components/empty-state/empty-state"
+  }
+}

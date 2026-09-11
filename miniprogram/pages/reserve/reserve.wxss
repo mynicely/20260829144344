@@ -1,0 +1,15 @@
+.section-inline { display: flex; align-items: center; margin: 30rpx 28rpx 4rpx; }
+.section-title { font-size: 34rpx; font-weight: 600; letter-spacing: 4rpx; }
+.section-seal { width: 36rpx; height: 8rpx; margin-left: 14rpx; background: var(--color-cinnabar); border-radius: 4rpx; opacity: 0.8; }
+.reserve-tip { margin: 12rpx 0 24rpx; }
+.form-item {
+  display: flex; align-items: center;
+  padding: 24rpx 0;
+  border-bottom: 1rpx dashed #F0EAE0;
+}
+.form-item:last-of-type { border-bottom: none; }
+.form-label { width: 160rpx; color: var(--color-ink); font-size: 28rpx; }
+.form-input { flex: 1; font-size: 28rpx; }
+.form-value { flex: 1; display: flex; justify-content: space-between; font-size: 28rpx; }
+.picker-arrow { color: var(--color-gray-tip); }
+.page-paper { padding-bottom: 40rpx; }

@@ -1,0 +1,67 @@
+<view class="page-paper" wx:if="{{bargain}}">
+  <!-- 砍价主卡 -->
+  <view class="hero">
+    <view class="hero-course">{{bargain.course_title}}</view>
+    <view class="hero-price-row">
+      <view class="hero-now">¥{{bargain.current_price}}</view>
+      <view class="hero-origin price-through">原价 ¥{{bargain.price}}</view>
+    </view>
+    <view class="progress-bar">
+      <view class="progress-fill" style="width: {{bargain.pctValue}}%"></view>
+    </view>
+    <view class="hero-meta row-between">
+      <text class="tip">已砍至底价即可购买</text>
+      <text class="hero-countdown" wx:if="{{bargain.status === 'active'}}">剩 {{bargain.remainText}}</text>
+      <seal-tag status="{{bargain.status}}" wx:else />
+    </view>
+    <view class="hero-floor">底价 ¥{{bargain.floor_price}} · 已{{helpers.length}}人帮砍</view>
+  </view>
+
+  <!-- 帮砍与购买 -->
+  <view class="card action-card">
+    <gf-button wx:if="{{bargain.status === 'active'}}" type="primary"
+      text="{{helping ? '砍价中…' : '帮好友砍一刀'}}" disabled="{{helping}}" loading="{{helping}}" bind:tap="onHelpTap" />
+    <gf-button wx:if="{{bargain.status === 'active'}}" type="outline"
+      text="{{buying ? '购买中…' : '按当前价购买 ¥' + bargain.current_price}}"
+      disabled="{{buying}}" loading="{{buying}}" bind:tap="onBuyTap" />
+    <gf-button wx:if="{{bargain.status === 'active'}}" type="ghost" text="复制砍价链接" bind:tap="onCopy" />
+    <view class="tip" style="text-align:center;margin-top:16rpx;" wx:if="{{bargain.status === 'active'}}">
+      好友帮砍可大幅降价，底价 ¥{{bargain.floor_price}}
+    </view>
+  </view>
+
+  <!-- 帮砍记录 -->
+  <view class="section-inline" wx:if="{{helpers.length}}">
+    <view class="section-title font-art">帮砍记录</view>
+    <view class="section-seal"></view>
+  </view>
+  <view class="card" wx:if="{{helpers.length}}">
+    <view class="helper-row row-between" wx:for="{{helpers}}" wx:key="index">
+      <view class="row">
+        <view class="helper-avatar font-art">{{item.avatarChar}}</view>
+        <text class="helper-name">{{item.nickname || '好友'}}</text>
+      </view>
+      <text class="helper-cut">砍掉 ¥{{item.cut_amount}}</text>
+    </view>
+  </view>
+
+  <view class="compliance">砍价属于优惠活动，该订单不计分享奖励</view>
+  <view class="safe-bottom"></view>
+
+  <!-- promoter 确认弹窗（业务逻辑与 web 端一致） -->
+  <gf-modal visible="{{promoterModal}}" title="确认砍价购买"
+    content="您当前是分享推广身份，参与砍价优惠，本订单将放弃全部分享奖励，不会产生推广收益，也不会更新您的分享推广身份，确认继续下单？"
+    confirmText="确认下单" cancelText="取消" danger
+    bind:confirm="onPromoterConfirm" bind:cancel="onPromoterCancel" />
+
+  <!-- 线下收款信息 -->
+  <gf-modal visible="{{payModalVisible}}" title="线下转账付款" confirmText="我已转账，等待开通" showCancel="{{false}}" bind:confirm="closePayModal">
+    <view class="pay-info">
+      <view class="pay-amount">应付金额 <text class="price">¥{{payAmount}}</text></view>
+      <view class="pay-line" wx:if="{{receiveInfo.wechatAccount}}">微信收款：{{receiveInfo.wechatAccount}}</view>
+      <view class="pay-line" wx:if="{{receiveInfo.alipayAccount}}">支付宝：{{receiveInfo.alipayAccount}}</view>
+      <view class="pay-line" wx:if="{{receiveInfo.bankName}}">银行：{{receiveInfo.bankName}} {{receiveInfo.bankAccount}}（{{receiveInfo.bankHolder}}）</view>
+      <view class="pay-tip">转账后请等待管理员确认到账，确认后自动开通课程</view>
+    </view>
+  </gf-modal>
+</view>

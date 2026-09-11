@@ -1,0 +1,86 @@
+<view class="page-paper">
+  <!-- 纯学习模式：仅提示，不展示任何分享推广数据 -->
+  <block wx:if="{{!isShareMode}}">
+    <view class="card pure-mode">
+      <view class="pure-icon font-art">学</view>
+      <view class="pure-title">当前为纯学习模式</view>
+      <view class="pure-desc">{{compliance}}</view>
+      <gf-button type="primary" text="去「我的」开启分享推广模式" bind:tap="goMine" />
+    </view>
+  </block>
+
+  <!-- 分享推广模式 -->
+  <block wx:else>
+    <!-- 我的介绍数据 -->
+    <view class="hero">
+      <view class="hero-title font-art">我的分享</view>
+      <view class="hero-stats">
+        <view class="stat">
+          <view class="stat-num">{{fission.directCount || 0}}</view>
+          <view class="stat-label">直接好友</view>
+        </view>
+        <view class="stat">
+          <view class="stat-num">{{fission.teamCount || 0}}</view>
+          <view class="stat-label">团队人数</view>
+        </view>
+        <view class="stat">
+          <view class="stat-num">¥{{fission.totalEarned || 0}}</view>
+          <view class="stat-label">累计收益</view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 邀请码 -->
+    <view class="card code-card">
+      <view class="row-between">
+        <view class="code-label font-art">我的邀请码</view>
+        <view class="code-value">{{inviteCode}}</view>
+        <view class="code-copy" bindtap="onCopy">复制</view>
+      </view>
+      <view class="tip" style="margin-top:12rpx;">好友注册时填写此邀请码，即可绑定推荐关系</view>
+    </view>
+
+    <!-- 分享海报 -->
+    <view class="card poster-card">
+      <view class="section-inline">
+        <view class="section-title font-art">分享海报</view>
+        <view class="section-seal"></view>
+      </view>
+      <canvas type="2d" id="posterCanvas" class="poster-canvas"></canvas>
+      <view class="poster-ops">
+        <gf-button type="outline" text="生成海报" bind:tap="onGenPoster" />
+        <gf-button type="primary" text="保存到相册" disabled="{{!posterUrl}}" bind:tap="onSavePoster" />
+      </view>
+    </view>
+
+    <!-- 直接好友 -->
+    <view class="section-inline" wx:if="{{fission.directList.length}}">
+      <view class="section-title font-art">直接好友</view>
+      <view class="section-seal"></view>
+    </view>
+    <view class="card friend-row row-between" wx:for="{{fission.directList}}" wx:key="id">
+      <view class="row">
+        <view class="friend-avatar font-art">{{item.avatarChar}}</view>
+        <view>
+          <view class="friend-name">{{item.nickname || '好友'}}</view>
+          <view class="tip">{{item.phone}}</view>
+        </view>
+      </view>
+      <seal-tag status="{{item.is_paid ? 'approved' : 'pending'}}" text="{{item.is_paid ? '已购课' : '待购课'}}" />
+    </view>
+    <empty-state wx:if="{{!fission.directList || !fission.directList.length}}" type="friend" tip="暂无好友，快去分享邀请码吧" />
+
+    <!-- 分享排行榜 -->
+    <view class="section-inline" wx:if="{{rank.length}}">
+      <view class="section-title font-art">分享排行榜</view>
+      <view class="section-seal"></view>
+    </view>
+    <view class="card rank-row" wx:for="{{rank}}" wx:key="id">
+      <view class="rank-no font-art {{index < 3 ? 'rank-top' : ''}}">{{index + 1}}</view>
+      <view class="rank-name">{{item.nickname || '学员'}}</view>
+      <view class="rank-count">邀 {{item.direct}} 人</view>
+    </view>
+  </block>
+
+  <view class="safe-bottom"></view>
+</view>

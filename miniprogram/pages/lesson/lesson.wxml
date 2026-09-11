@@ -1,0 +1,45 @@
+<view class="page-paper">
+  <!-- 我的课程 -->
+  <view class="course-card card" wx:for="{{courses}}" wx:key="gkey" wx:if="{{item.course}}">
+    <view class="course-head row" data-id="{{item.course_id}}" bindtap="onCourseTap">
+      <image wx:if="{{item.course.cover}}" class="course-cover" src="{{item.course.cover}}" mode="aspectFill" />
+      <view wx:else class="course-cover course-cover-fallback font-art">书</view>
+      <view class="flex-1 course-info">
+        <view class="course-title ellipsis">{{item.course.title}}</view>
+        <view class="tip ellipsis">{{item.course.subtitle}}</view>
+        <view class="row-between" style="margin-top:10rpx;">
+          <text class="tip">已学 {{item.course.chapterDone}}/{{item.course.chapterTotal}} 章</text>
+          <text class="expand-arrow">{{expandedId === item.course_id ? '收起 ▲' : '展开 ▼'}}</text>
+        </view>
+        <view class="mini-progress">
+          <view class="mini-progress-fill" style="width: {{item.progress}}%"></view>
+        </view>
+      </view>
+    </view>
+    <!-- 章节列表 -->
+    <view class="chapter-list" wx:if="{{expandedId === item.course_id}}">
+      <view class="chapter-row row-between" wx:for="{{chapters}}" wx:key="id">
+        <view class="row" style="min-width:0;">
+          <view class="chapter-index {{item.done ? 'chapter-index-done' : ''}}">{{item.done ? '✓' : index + 1}}</view>
+          <view class="chapter-name ellipsis" data-ch="{{item}}" bindtap="onChapterTap">{{item.title}}</view>
+        </view>
+        <view class="row">
+          <text class="tip" wx:if="{{item.duration}}">{{item.duration}}</text>
+          <view class="done-toggle {{item.done ? 'done-toggle-on' : ''}}"
+            data-course-id="{{expandedId}}" data-chapter-id="{{item.id}}" data-done="{{item.done}}"
+            bindtap="onToggleDone">{{item.done ? '已完成' : '标为完成'}}</view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <empty-state wx:if="{{!loading && !courses.length}}" type="none" tip="暂无已购课程，快去报名吧" />
+
+  <view class="buy-entry" wx:if="{{!courses.length}}" bindtap="goBuy">
+    <view class="font-art" style="font-size:32rpx;">前往选课报名</view>
+    <view class="tip">报名后课程将在这里展示</view>
+  </view>
+
+  <view class="safe-bottom"></view>
+</view>
+<custom-tabbar current="{{1}}" />

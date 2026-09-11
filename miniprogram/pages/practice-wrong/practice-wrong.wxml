@@ -1,0 +1,21 @@
+<view class="page-paper">
+  <view class="card q-item" wx:for="{{list}}" wx:key="id">
+    <view class="q-type">{{item.type === 'multi' ? '多选题' : (item.type === 'judge' ? '判断题' : '单选题')}}</view>
+    <view class="q-text">{{index + 1}}. {{item.question}}</view>
+    <view class="option-line" wx:for="{{item.options}}" wx:key="k">
+      <text class="option-key font-art">{{item.k}}</text>
+      <text>{{item.t}}</text>
+    </view>
+    <view class="q-answer q-wrong-line">
+      <text class="q-label">我的答案：</text>{{item.my_answer || '未作答'}}
+    </view>
+    <view class="q-answer q-right-line">
+      <text class="q-label">正确答案：</text>{{item.answer}}
+    </view>
+    <view class="q-analysis" wx:if="{{item.analysis}}">
+      <text class="q-label">解析：</text>{{item.analysis}}
+    </view>
+  </view>
+  <empty-state wx:if="{{!loading && !list.length}}" type="none" tip="暂无错题，继续保持！" />
+  <view class="safe-bottom"></view>
+</view>

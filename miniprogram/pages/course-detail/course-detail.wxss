@@ -1,0 +1,103 @@
+.cover-wrap {
+  position: relative;
+  height: 420rpx;
+  margin: 20rpx 24rpx;
+  border-radius: 16rpx;
+  overflow: hidden;
+}
+.cover-img { width: 100%; height: 100%; }
+.cover-fallback {
+  width: 100%; height: 100%;
+  display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(160deg, #F0E8DA, #E4D6BF);
+  color: var(--color-stone); font-size: 120rpx;
+}
+.cover-level { position: absolute; left: 24rpx; top: 24rpx; background: rgba(255,255,255,0.85); padding: 8rpx 18rpx; border-radius: 8rpx; }
+.cover-dots { position: absolute; bottom: 16rpx; left: 0; right: 0; display: flex; justify-content: center; gap: 10rpx; }
+.cover-dot { width: 12rpx; height: 12rpx; border-radius: 50%; background: rgba(255,255,255,0.5); }
+.cover-dot-active { background: #fff; }
+
+.price-card { padding-bottom: 20rpx; }
+.course-title { font-size: 38rpx; font-weight: 600; letter-spacing: 2rpx; }
+.course-sub { color: var(--color-gray-tip); font-size: 26rpx; margin: 8rpx 0; }
+.price-row { align-items: baseline; margin-top: 12rpx; }
+.pay-price { color: var(--color-cinnabar); font-size: 52rpx; font-weight: 700; margin-right: 16rpx; }
+.coupon-row { margin-top: 16rpx; padding: 12rpx 16rpx; background: rgba(183,121,31,0.08); border-radius: 8rpx; display: flex; justify-content: space-between; font-size: 24rpx; }
+.coupon-label { color: var(--color-stone); }
+.coupon-value { color: var(--color-cinnabar); font-weight: 600; }
+
+.section { display: flex; align-items: center; margin: 36rpx 28rpx 4rpx; }
+.section-title { font-size: 34rpx; font-weight: 600; letter-spacing: 4rpx; }
+.section-seal { width: 36rpx; height: 8rpx; margin-left: 14rpx; background: var(--color-cinnabar); border-radius: 4rpx; opacity: 0.8; }
+
+.rich-text { font-size: 28rpx; color: #3a3a3a; word-break: break-all; }
+.teacher-card { padding-top: 36rpx; position: relative; }
+.teacher-name { font-size: 32rpx; color: var(--color-cinnabar); margin-bottom: 12rpx; }
+
+.chapter-item { display: flex; align-items: center; padding: 16rpx 0; border-bottom: 1rpx dashed #F0EAE0; }
+.chapter-item:last-child { border-bottom: none; }
+.chapter-index {
+  width: 48rpx; height: 48rpx; line-height: 48rpx;
+  text-align: center; font-size: 26rpx;
+  color: var(--color-cinnabar);
+  border: 1rpx solid rgba(200,36,35,0.4);
+  border-radius: 50%; margin-right: 20rpx; flex-shrink: 0;
+}
+.chapter-name { font-size: 28rpx; flex: 1; }
+
+.faq-q { color: var(--color-ink); font-weight: 600; margin-bottom: 8rpx; }
+.faq-a { color: #555; font-size: 26rpx; }
+
+.review-head { justify-content: space-between; margin-bottom: 10rpx; }
+.review-user { color: var(--color-stone); font-size: 26rpx; }
+.review-stars { color: #E8B04B; font-size: 24rpx; }
+
+/* 底部操作栏 */
+.bottom-bar {
+  position: fixed; left: 0; right: 0; bottom: 0;
+  display: flex; gap: 16rpx;
+  padding: 16rpx 24rpx;
+  padding-bottom: calc(16rpx + env(safe-area-inset-bottom));
+  background: #FDFBF7;
+  border-top: 1rpx solid #EAE3D8;
+  z-index: 50;
+}
+.bottom-btn { flex: 1; height: 84rpx; line-height: 84rpx; text-align: center; border-radius: var(--radius-md); font-size: 30rpx; }
+.bottom-btn-ghost { border: 1rpx solid #D8D0C4; color: var(--color-stone); background: #fff; }
+.bottom-btn-main { background: var(--color-cinnabar); color: #fff; flex: 1.6; }
+.bottom-btn-main.disabled { opacity: 0.5; }
+.page-paper { padding-bottom: 180rpx; }
+
+/* 二选一选项卡片 */
+.choose-list { padding: 20rpx 40rpx 8rpx; }
+.choose-card {
+  position: relative;
+  border: 1rpx solid #E0D6C6;
+  border-radius: 12rpx;
+  padding: 24rpx;
+  margin-bottom: 20rpx;
+  background: #fff;
+}
+.choose-title { margin-bottom: 8rpx; }
+.choose-icon {
+  width: 56rpx; height: 56rpx; line-height: 56rpx;
+  text-align: center; font-size: 28rpx;
+  background: var(--color-cinnabar); color: #fff;
+  border-radius: 10rpx; margin-right: 16rpx;
+}
+.choose-icon-plain { background: rgba(200,36,35,0.1); color: var(--color-cinnabar); border: 1rpx solid rgba(200,36,35,0.4); }
+.choose-name { font-size: 32rpx; font-weight: 600; }
+.choose-desc { font-size: 24rpx; color: var(--color-gray-tip); padding-left: 72rpx; }
+.choose-seal {
+  position: absolute; right: 20rpx; top: 16rpx;
+  font-size: 20rpx; color: var(--color-cinnabar);
+  border: 1rpx solid var(--color-cinnabar);
+  border-radius: 6rpx; padding: 2rpx 10rpx;
+  transform: rotate(8deg);
+}
+
+/* 线下收款信息 */
+.pay-info { padding: 20rpx 40rpx 8rpx; font-size: 28rpx; }
+.pay-amount { margin-bottom: 16rpx; }
+.pay-line { padding: 8rpx 0; color: #444; word-break: break-all; }
+.pay-tip { padding-top: 12rpx; color: var(--color-gray-tip); font-size: 24rpx; }

@@ -1,0 +1,38 @@
+[init] 已创建默认管理员 admin/admin123，请登录后台后立即修改密码
+[init] 题库种子补齐 52 道题（现有 52 道）
+翰墨分享服务已启动: http://localhost:3101
+[部署提醒] 生产环境请单进程运行（node src/index.js），禁止 pm2 cluster 多进程模式：SQLite 不支持多进程并发写入
+[cron] catch-up daily check done 2026-09-01
+[cron] catch-up monthly settle+reset done 2026-09
+[0mGET /api/health [32m200[0m 11.165 ms - 47[0m
+[0mGET /api/health [32m200[0m 2.415 ms - 47[0m
+[0mPOST /api/admin/login [32m200[0m 325.364 ms - 207[0m
+[0mPOST /api/auth/register [32m200[0m 235.719 ms - 557[0m
+[0mPOST /api/auth/register [32m200[0m 250.999 ms - 556[0m
+[0mPOST /api/order [32m200[0m 12.378 ms - 684[0m
+[0mPOST /api/admin/orders/1/confirm-pay [32m200[0m 18.661 ms - 411[0m
+[0mPOST /api/order [32m200[0m 5.605 ms - 683[0m
+[0mPOST /api/auth/register [32m200[0m 248.145 ms - 557[0m
+[0mPOST /api/order [32m200[0m 5.330 ms - 665[0m
+[0mPOST /api/auth/register [32m200[0m 232.796 ms - 558[0m
+[0mPOST /api/order [32m200[0m 8.152 ms - 680[0m
+[0mPOST /api/admin/run-daily-check [32m200[0m 17.426 ms - 54[0m
+[0mPOST /api/auth/login [32m200[0m 232.505 ms - 569[0m
+[0mGET /api/user/wallet [32m200[0m 3.877 ms - 192[0m
+[0mPOST /api/user/withdraw [32m200[0m 4.280 ms - 62[0m
+[0mPOST /api/user/withdraw [33m400[0m 3.861 ms - 60[0m
+[0mGET /api/user/wallet [32m200[0m 3.439 ms - 194[0m
+[0mPOST /api/admin/orders/4/refund [32m200[0m 6.910 ms - 201[0m
+[0mGET /api/user/wallet [32m200[0m 3.141 ms - 192[0m
+[0mPOST /api/community/posts [32m200[0m 5.447 ms - 75[0m
+[0mGET /api/community/posts [32m200[0m 1.974 ms - 21[0m
+[0mPOST /api/admin/posts/1/status [32m200[0m 2.465 ms - 35[0m
+[0mGET /api/community/posts [32m200[0m 1.831 ms - 276[0m
+[0mPOST /api/community/posts/1/comment [32m200[0m 3.218 ms - 71[0m
+[0mPOST /api/admin/comments/1/status [32m200[0m 2.960 ms - 35[0m
+[0mPOST /api/admin/sensitive-words [32m200[0m 2.942 ms - 89[0m
+[0mPOST /api/community/posts [33m400[0m 2.471 ms - 87[0m
+[0mGET /api/admin/users [33m403[0m 1.556 ms - 30[0m
+[0mPUT /api/community/posts/1 [33m404[0m 3.489 ms - 36[0m
+[0mPOST /api/trial/book [32m200[0m 3.144 ms - 104[0m
+[0mGET /api/admin/dashboard [32m200[0m 5.755 ms - 106[0m

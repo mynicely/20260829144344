@@ -1,0 +1,59 @@
+.post-avatar {
+  width: 68rpx; height: 68rpx; line-height: 68rpx;
+  text-align: center; font-size: 30rpx;
+  background: rgba(74, 99, 116, 0.15); color: var(--color-stone);
+  border-radius: 50%; margin-right: 16rpx;
+}
+.post-author { font-size: 28rpx; font-weight: 600; }
+.manage-btn {
+  font-size: 24rpx; color: var(--color-stone);
+  border: 1rpx solid #D8D0C4; border-radius: 24rpx;
+  padding: 6rpx 24rpx;
+}
+.post-title { font-size: 34rpx; font-weight: 600; margin: 20rpx 0 12rpx; }
+.post-content { font-size: 28rpx; color: #444; line-height: 1.8; }
+.post-imgs { display: flex; flex-wrap: wrap; gap: 10rpx; margin-top: 16rpx; }
+.post-img { width: 210rpx; height: 210rpx; border-radius: 10rpx; }
+.post-img-single { width: 320rpx; height: 240rpx; }
+.post-like {
+  margin-top: 24rpx;
+  display: inline-block;
+  font-size: 26rpx; color: var(--color-stone);
+  border: 1rpx solid #D8D0C4; border-radius: 30rpx;
+  padding: 10rpx 32rpx;
+}
+.post-like-on { color: var(--color-cinnabar); border-color: var(--color-cinnabar); background: rgba(200,36,35,0.05); }
+
+.section-inline { display: flex; align-items: center; margin: 30rpx 28rpx 4rpx; }
+.section-title { font-size: 34rpx; font-weight: 600; letter-spacing: 4rpx; }
+.section-seal { width: 36rpx; height: 8rpx; margin-left: 14rpx; background: var(--color-cinnabar); border-radius: 4rpx; opacity: 0.8; }
+
+.comment-item { margin-top: 20rpx; }
+.comment-avatar {
+  width: 60rpx; height: 60rpx; line-height: 60rpx;
+  text-align: center; font-size: 26rpx;
+  background: rgba(74, 99, 116, 0.12); color: var(--color-stone);
+  border-radius: 50%; margin-right: 16rpx;
+}
+.comment-name { font-size: 26rpx; color: var(--color-stone); }
+.comment-content { font-size: 28rpx; margin: 6rpx 0; }
+
+.comment-bar {
+  position: fixed; left: 0; right: 0; bottom: 0;
+  display: flex; align-items: center; gap: 16rpx;
+  padding: 16rpx 24rpx;
+  padding-bottom: calc(16rpx + env(safe-area-inset-bottom));
+  background: #FDFBF7;
+  border-top: 1rpx solid #EAE3D8;
+  z-index: 50;
+}
+.comment-input {
+  flex: 1;
+  background: #fff; border: 1rpx solid #E0D6C6; border-radius: 34rpx;
+  padding: 14rpx 26rpx; font-size: 28rpx;
+}
+.comment-send {
+  color: #fff; background: var(--color-cinnabar);
+  border-radius: 34rpx; padding: 14rpx 34rpx; font-size: 28rpx;
+}
+.page-paper { padding-bottom: 180rpx; }

@@ -1,0 +1,37 @@
+<view class="page-paper">
+  <view class="card form-card">
+    <view class="form-item">
+      <text class="form-label">标题</text>
+      <input class="form-input" placeholder="请输入标题（选填）" maxlength="60" value="{{title}}" bindinput="onTitleInput" />
+    </view>
+    <picker range="{{categories}}" range-key="name" value="{{catIndex}}" bindchange="onCatChange">
+      <view class="form-item">
+        <text class="form-label">分类</text>
+        <view class="form-value">
+          {{categories.length ? categories[catIndex].name : '作品展示'}}
+          <text class="picker-arrow">›</text>
+        </view>
+      </view>
+    </picker>
+    <textarea class="content-area" placeholder="分享你的作品、学习心得或疑问…" maxlength="2000"
+      value="{{content}}" bindinput="onContentInput" />
+    <view class="tip" style="text-align:right;">{{content.length}}/2000</view>
+
+    <!-- 图片选择 -->
+    <view class="img-grid">
+      <view class="img-cell" wx:for="{{images}}" wx:key="*this">
+        <image class="img-preview" src="{{item}}" mode="aspectFill" />
+        <view class="img-del" data-index="{{index}}" bindtap="onRemoveImage">×</view>
+      </view>
+      <view class="img-cell img-add" wx:if="{{images.length < 9}}" bindtap="onChooseImages">
+        <view class="img-add-plus">+</view>
+        <view class="tip">添加图片</view>
+      </view>
+    </view>
+  </view>
+
+  <view class="publish-area">
+    <gf-button type="primary" text="{{publishing ? '发布中…' : '发布'}}" disabled="{{publishing}}" loading="{{publishing}}" bind:tap="onPublish" />
+  </view>
+  <view class="safe-bottom"></view>
+</view>

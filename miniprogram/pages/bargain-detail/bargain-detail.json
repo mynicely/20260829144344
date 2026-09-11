@@ -1,0 +1,8 @@
+{
+  "navigationBarTitleText": "砍价详情",
+  "usingComponents": {
+    "seal-tag": "/components/seal-tag/seal-tag",
+    "gf-modal": "/components/gf-modal/gf-modal",
+    "gf-button": "/components/gf-button/gf-button"
+  }
+}

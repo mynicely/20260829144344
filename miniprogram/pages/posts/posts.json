@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "学员社区",
+  "usingComponents": {
+    "custom-tabbar": "/components/custom-tabbar/custom-tabbar",
+    "empty-state": "/components/empty-state/empty-state"
+  }
+}

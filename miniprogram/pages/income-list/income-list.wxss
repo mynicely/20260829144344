@@ -1,0 +1,53 @@
+.wallet {
+  margin: 20rpx 24rpx;
+  display: flex;
+  border-radius: 16rpx;
+  background: linear-gradient(150deg, #4A6374 0%, #6B8798 100%);
+  color: #F8F5F0;
+  padding: 36rpx 20rpx;
+}
+.wallet-item { flex: 1; text-align: center; }
+.wallet-divider { width: 1rpx; background: rgba(255,255,255,0.25); }
+.wallet-label { font-size: 24rpx; opacity: 0.85; }
+.wallet-num { font-size: 52rpx; font-weight: 800; color: #FFD54F; margin: 12rpx 0; }
+.wallet-num-coupon { color: #A7E0C9; }
+.wallet-withdraw {
+  display: inline-block; font-size: 22rpx;
+  border: 1rpx solid #FFD54F; color: #FFD54F;
+  border-radius: 24rpx; padding: 4rpx 24rpx;
+}
+.wallet-tip { font-size: 20rpx; opacity: 0.75; }
+
+.settle-note { margin-top: 20rpx; }
+.section-inline { display: flex; align-items: center; margin-bottom: 16rpx; }
+.section-title { font-size: 32rpx; font-weight: 600; letter-spacing: 4rpx; }
+.section-seal { width: 36rpx; height: 8rpx; margin-left: 14rpx; background: var(--color-cinnabar); border-radius: 4rpx; opacity: 0.8; }
+.note-row { display: flex; padding: 10rpx 0; font-size: 24rpx; }
+.note-name { width: 200rpx; color: var(--color-ink); flex-shrink: 0; }
+.note-desc { color: var(--color-gray-tip); }
+
+.tabs {
+  display: flex;
+  margin: 24rpx;
+  background: #fff;
+  border: var(--border-thin);
+  border-radius: 10rpx;
+  overflow: hidden;
+}
+.tab {
+  flex: 1; text-align: center;
+  padding: 20rpx 0; font-size: 26rpx;
+  color: var(--color-stone);
+}
+.tab-on {
+  color: var(--color-cinnabar); font-weight: 600;
+  border-bottom: 4rpx solid var(--color-cinnabar);
+}
+
+.item-row { display: flex; align-items: center; margin-top: 20rpx; padding: 24rpx; }
+.item-title { font-size: 28rpx; }
+.item-right { text-align: right; }
+.item-amount { font-size: 32rpx; font-weight: 700; }
+.item-in { color: var(--color-cinnabar); }
+.item-out { color: #888; }
+.page-paper { padding-bottom: 40rpx; }

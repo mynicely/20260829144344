@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "个人中心",
+  "usingComponents": {
+    "seal-tag": "/components/seal-tag/seal-tag",
+    "custom-tabbar": "/components/custom-tabbar/custom-tabbar"
+  }
+}

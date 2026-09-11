@@ -1,0 +1,48 @@
+.empty {
+  padding: 120rpx 40rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: var(--color-gray-tip);
+}
+/* 简约水墨插画 */
+.art {
+  position: relative;
+  width: 160rpx;
+  height: 160rpx;
+  margin-bottom: 30rpx;
+}
+.art-circle {
+  position: absolute;
+  left: 20rpx;
+  top: 20rpx;
+  width: 110rpx;
+  height: 110rpx;
+  border-radius: 50%;
+  border: 4rpx solid rgba(74, 99, 116, 0.35);
+  opacity: 0.5;
+}
+.art-dot {
+  position: absolute;
+  width: 14rpx;
+  height: 14rpx;
+  border-radius: 50%;
+  background: rgba(200, 36, 35, 0.5);
+}
+.art-dot-1 { right: 26rpx; top: 30rpx; }
+.art-dot-2 { left: 10rpx; bottom: 36rpx; width: 10rpx; height: 10rpx; }
+.art-brush {
+  position: absolute;
+  right: 16rpx;
+  bottom: 24rpx;
+  width: 46rpx;
+  height: 8rpx;
+  border-radius: 8rpx;
+  background: rgba(26, 26, 26, 0.35);
+  transform: rotate(-28deg);
+}
+.art-text {
+  font-size: 30rpx;
+  color: var(--color-stone);
+  margin-bottom: 8rpx;
+}

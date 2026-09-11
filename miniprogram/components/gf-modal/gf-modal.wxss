@@ -1,0 +1,75 @@
+.gf-modal-mask {
+  position: fixed;
+  left: 0; top: 0; right: 0; bottom: 0;
+  background: rgba(26, 26, 26, 0.55);
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.gf-modal {
+  width: 600rpx;
+  max-height: 78vh;
+  background: #FDFBF7;
+  border-radius: 16rpx;
+  border: 1rpx solid #EAE3D8;
+  box-shadow: 0 12rpx 48rpx rgba(0, 0, 0, 0.18);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.gf-modal-head {
+  position: relative;
+  padding: 40rpx 40rpx 8rpx;
+  text-align: center;
+}
+.gf-modal-title {
+  font-size: 36rpx;
+  color: var(--color-ink);
+  font-weight: 600;
+  letter-spacing: 4rpx;
+}
+/* 标题下朱砂印章点缀 */
+.gf-modal-seal {
+  width: 44rpx;
+  height: 8rpx;
+  margin: 16rpx auto 0;
+  background: var(--color-cinnabar);
+  border-radius: 4rpx;
+  opacity: 0.85;
+}
+.gf-modal-body {
+  padding: 24rpx 40rpx 8rpx;
+  font-size: 28rpx;
+  color: #444;
+  line-height: 1.7;
+  white-space: pre-line;
+  overflow-y: auto;
+}
+.gf-modal-foot {
+  display: flex;
+  padding: 32rpx 40rpx 36rpx;
+  gap: 20rpx;
+}
+.gf-modal-btn {
+  flex: 1;
+  height: 80rpx;
+  line-height: 80rpx;
+  text-align: center;
+  border-radius: var(--radius-md);
+  font-size: 30rpx;
+}
+.gf-modal-btn-cancel {
+  border: 1rpx solid #D8D0C4;
+  color: var(--color-stone);
+  background: transparent;
+}
+.gf-modal-btn-ok {
+  background: var(--color-cinnabar);
+  color: #fff;
+}
+.gf-modal-btn-danger {
+  background: transparent;
+  color: var(--color-cinnabar);
+  border: 1rpx solid var(--color-cinnabar);
+}

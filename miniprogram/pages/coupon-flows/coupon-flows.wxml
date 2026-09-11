@@ -1,0 +1,41 @@
+<view class="page-paper">
+  <!-- 抵现金余额卡片（学习任务产出，仅抵扣学费） -->
+  <view class="balance-hero">
+    <view class="balance-label">抵现金余额</view>
+    <view class="balance-num">¥{{couponBalance}}</view>
+    <view class="balance-sub">学习任务产出 · 仅抵扣学费，不可提现</view>
+  </view>
+
+  <!-- 累计赚取 -->
+  <view class="card earned-card">
+    <view class="row-between">
+      <view class="earned-label">累计赚取</view>
+      <view class="earned-num">¥{{totalEarned}}</view>
+    </view>
+    <view class="tip" style="margin-top:8rpx;">抵现金通过每日打卡与学习任务获取，仅用于课程抵扣，不参与提现</view>
+  </view>
+
+  <!-- 收支明细 -->
+  <view class="section-inline">
+    <view class="section-title font-art">收支明细</view>
+    <view class="section-seal"></view>
+  </view>
+
+  <view class="card flow-row" wx:for="{{flows}}" wx:key="id">
+    <view class="flow-left">
+      <view class="flow-type">{{item.typeText}}</view>
+      <view class="tip">{{item.remark || ''}}</view>
+      <view class="tip">{{item.date}}</view>
+    </view>
+    <view class="flow-right">
+      <view class="flow-amount {{item.amount >= 0 ? 'flow-in' : 'flow-out'}}">{{item.amount >= 0 ? '+' : ''}}{{item.amount}}</view>
+      <view class="tip">余额 ¥{{item.balance_after}}</view>
+    </view>
+  </view>
+
+  <empty-state wx:if="{{!loading && !flows.length}}" type="income" tip="暂无明细，完成打卡/学习任务即可赚取抵现金" />
+
+  <!-- 合规小字（评审要求保留） -->
+  <view class="compliance">任务获取抵现金存在每日上限，抵现金仅抵扣学费，不支持提现</view>
+  <view class="safe-bottom"></view>
+</view>

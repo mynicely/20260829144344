@@ -1,0 +1,63 @@
+<view class="page-paper">
+  <!-- 预约表单 -->
+  <view class="card">
+    <view class="section-inline">
+      <view class="section-title font-art">免费体验课</view>
+      <view class="section-seal"></view>
+    </view>
+    <view class="tip reserve-tip">纠正执笔坐姿 · 基础笔画评估 · 定制学习规划，全程免费。</view>
+
+    <view class="form-item">
+      <text class="form-label">姓名</text>
+      <input class="form-input" placeholder="请输入学员姓名" value="{{name}}" data-field="name" bindinput="onInput" />
+    </view>
+    <view class="form-item">
+      <text class="form-label">手机号</text>
+      <input class="form-input" type="number" maxlength="11" placeholder="用于接收回访电话" value="{{phone}}" data-field="phone" bindinput="onInput" />
+    </view>
+    <picker range="{{ageGroups}}" value="{{ageIndex}}" bindchange="onAgeChange">
+      <view class="form-item">
+        <text class="form-label">年龄段</text>
+        <view class="form-value">{{ageGroups[ageIndex]}}<text class="picker-arrow">›</text></view>
+      </view>
+    </picker>
+    <picker range="{{subjects}}" value="{{subjectIndex}}" bindchange="onSubjectChange">
+      <view class="form-item">
+        <text class="form-label">学习内容</text>
+        <view class="form-value">{{subjects[subjectIndex]}}<text class="picker-arrow">›</text></view>
+      </view>
+    </picker>
+    <picker range="{{modes}}" value="{{modeIndex}}" bindchange="onModeChange">
+      <view class="form-item">
+        <text class="form-label">上课方式</text>
+        <view class="form-value">{{modes[modeIndex]}}<text class="picker-arrow">›</text></view>
+      </view>
+    </picker>
+    <view class="form-item">
+      <text class="form-label">期望时间</text>
+      <input class="form-input" placeholder="如：周末上午（选填）" value="{{preferTime}}" data-field="preferTime" bindinput="onInput" />
+    </view>
+    <view class="form-item">
+      <text class="form-label">邀请码</text>
+      <input class="form-input" placeholder="选填，有推荐人可填" value="{{inviteCode}}" data-field="inviteCode" bindinput="onInput" />
+    </view>
+
+    <gf-button type="primary" text="{{submitting ? '提交中…' : '立即预约'}}" disabled="{{submitting}}" loading="{{submitting}}" bind:tap="onSubmit" />
+  </view>
+
+  <!-- 我的预约 -->
+  <view class="section-inline" wx:if="{{myTrials.length}}">
+    <view class="section-title font-art">我的预约</view>
+    <view class="section-seal"></view>
+  </view>
+  <view class="card" wx:for="{{myTrials}}" wx:key="id" bindtap="onMyTrialTap">
+    <view class="row-between">
+      <text>{{item.name}} · {{item.age_group}}</text>
+      <text class="tip">{{item.created_at}}</text>
+    </view>
+    <view class="tip" style="margin-top:8rpx;">{{item.subject}} · {{item.mode}}{{item.status === 'pending' ? '（待回访）' : ''}}</view>
+  </view>
+  <empty-state wx:if="{{!myTrials.length}}" type="none" tip="暂无预约记录" />
+
+  <view class="safe-bottom"></view>
+</view>

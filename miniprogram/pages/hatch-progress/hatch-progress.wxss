@@ -1,0 +1,24 @@
+.hatch-intro { margin-top: 20rpx; }
+.section-inline { display: flex; align-items: center; margin-bottom: 16rpx; }
+.section-title { font-size: 32rpx; font-weight: 600; letter-spacing: 4rpx; }
+.section-seal { width: 36rpx; height: 8rpx; margin-left: 14rpx; background: var(--color-cinnabar); border-radius: 4rpx; opacity: 0.8; }
+
+.hatch-item { margin-top: 20rpx; }
+.hatch-name { font-size: 30rpx; font-weight: 600; }
+.hatch-status { font-size: 26rpx; }
+.hatch-paid { color: #2E7D5B; font-weight: 600; }
+.hatch-full { color: #B7791F; font-weight: 600; }
+.hatch-locked { color: var(--color-gray-tip); }
+.hatch-progress { height: 16rpx; background: #F0EAE0; border-radius: 8rpx; margin: 20rpx 0 12rpx; overflow: hidden; }
+.hatch-fill { height: 100%; background: linear-gradient(90deg, var(--color-cinnabar), #E05A55); border-radius: 8rpx; }
+
+.trainee-entry {
+  display: flex; align-items: center; justify-content: center;
+  margin: 30rpx 24rpx 0;
+  padding: 22rpx;
+  border-top: 1rpx dashed #D8D0C4;
+  border-bottom: 1rpx dashed #D8D0C4;
+  color: var(--color-stone);
+}
+.trainee-entry-arrow { margin-left: 8rpx; }
+.page-paper { padding-bottom: 40rpx; }

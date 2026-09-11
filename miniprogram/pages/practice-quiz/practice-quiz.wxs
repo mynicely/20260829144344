@@ -1,0 +1,20 @@
+// WXS：WXML 中不允许直接调用 Page 方法，此处提供纯展示用计算
+function formatElapsed(s) {
+  s = s || 0
+  var m = Math.floor(s / 60)
+  var sec = s % 60
+  return (m < 10 ? '0' + m : '' + m) + ':' + (sec < 10 ? '0' + sec : '' + sec)
+}
+
+// 判断某题某选项是否已选中
+function isSelected(answers, qid, key) {
+  if (!answers) return false
+  var cur = answers[qid]
+  if (!cur) return false
+  return cur.indexOf(key) > -1
+}
+
+module.exports = {
+  formatElapsed: formatElapsed,
+  isSelected: isSelected,
+}

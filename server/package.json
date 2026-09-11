@@ -1,0 +1,22 @@
+{
+  "name": "hanmo-liebian-server",
+  "version": "1.0.0",
+  "description": "线上书法培训·裂变分销·管培生考核体系后端",
+  "main": "src/index.js",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "node src/index.js",
+    "start": "node src/index.js",
+    "init": "node src/index.js --init"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "cors": "^2.8.5",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.2",
+    "morgan": "^1.10.0",
+    "node-cron": "^3.0.3"
+  }
+}

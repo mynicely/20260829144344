@@ -1,0 +1,77 @@
+
+> hanmo-liebian-web@1.0.0 dev
+> vite
+
+[33mThe CJS build of Vite's Node API is deprecated. See https://vite.dev/guide/troubleshooting.html#vite-cjs-node-api-deprecated for more details.[39m
+
+  [32m[1mVITE[22m v5.4.21[39m  [2mready in [0m[1m10401[22m[2m[0m ms[22m
+
+  [32m➜[39m  [1mLocal[22m:   [36mhttp://localhost:[1m5173[22m/[39m
+[2m  [32m➜[39m  [1mNetwork[22m[2m: use [22m[1m--host[22m[2m to expose[22m
+[2m[32m  ➜[39m[22m[2m  press [22m[1mh + enter[22m[2m to show help[22m
+[2m03:15:22[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/views/Courses.vue?vue&type=style&index=0&scoped=5961144f&lang.css[22m
+[2m03:15:23[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/views/Courses.vue?vue&type=style&index=0&scoped=5961144f&lang.css[22m
+[2m03:15:56[22m [33m[1m[vite][22m[39m [33mwarning: <tr> cannot be child of <table>, according to HTML specifications. This can cause hydration errors or potentially disrupt future functionality.
+167|        <div class="scroll-box">
+168|          <table class="table">
+169|            <tr><th>管培生</th><th>主理人</th><th>状态</th><th>本周期业绩</th><th>达标进度</th><th>周期</th><th>零业绩周期</th></tr>
+   |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+170|            <tr v-for="it in p.items" :key="it.id">
+171|              <td>{{ it.nickname }}<span class="muted"> #{{ it.slotNo }}</span></td>[39m
+  Plugin: [35mvite:vue[39m
+  File: [36mC:/Users/Administrator/CodeBuddy/20260829144344/web/src/views/admin/Dashboard.vue[39m
+[2m03:15:56[22m [33m[1m[vite][22m[39m [33mwarning: <tr> cannot be child of <table>, according to HTML specifications. This can cause hydration errors or potentially disrupt future functionality.
+189|        <h2>主理人学习圈排行 Top 10 <span class="muted" style="font-size:11px;font-weight:400;">按合格学习圈业绩排序</span></h2>
+190|        <table class="table">
+191|          <tr><th>#</th><th>主理人</th><th>学习圈人数</th><th>合格</th><th>学习圈周期业绩</th><th>合格业绩</th><th>累计待遇</th><th>冻结名额</th></tr>
+   |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+192|          <tr v-for="(r,i) in ins.leaderRank" :key="r.leaderId">
+193|            <td>{{ i + 1 }}</td>[39m
+  Plugin: [35mvite:vue[39m
+  File: [36mC:/Users/Administrator/CodeBuddy/20260829144344/web/src/views/admin/Dashboard.vue[39m
+[2m03:15:56[22m [33m[1m[vite][22m[39m [33mwarning: <tr> cannot be child of <table>, according to HTML specifications. This can cause hydration errors or potentially disrupt future functionality.
+216|        </div>
+217|        <table class="table">
+218|          <tr><th>ID</th><th>昵称</th><th>身份</th><th>付费</th><th>月业绩</th><th>密码</th><th>操作</th></tr>
+   |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+219|          <tr v-for="u in filteredUsers" :key="u.id">
+220|            <td>{{ u.id }}</td><td>{{ u.nickname }}</td><td>{{ u.identity }}</td>[39m
+  Plugin: [35mvite:vue[39m
+  File: [36mC:/Users/Administrator/CodeBuddy/20260829144344/web/src/views/admin/Dashboard.vue[39m
+[2m03:17:52[22m [33m[1m[vite][22m[39m [33mwarning: <tr> cannot be child of <table>, according to HTML specifications. This can cause hydration errors or potentially disrupt future functionality.
+150|        <h2>分享奖励明细</h2>
+151|        <table class="table">
+152|          <tr><th>订单</th><th>产品</th><th>金额</th><th>状态</th></tr>
+   |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+153|          <tr v-for="c in commissions" :key="c.id">
+154|            <td>#{{ c.id }}</td><td>{{ c.product_type }}</td>[39m
+  Plugin: [35mvite:vue[39m
+  File: [36mC:/Users/Administrator/CodeBuddy/20260829144344/web/src/views/Mine.vue[39m
+[2m03:17:52[22m [33m[1m[vite][22m[39m [33mwarning: <tr> cannot be child of <table>, according to HTML specifications. This can cause hydration errors or potentially disrupt future functionality.
+175|        <p class="muted" style="font-size:12px;">待遇基数 = 该管培生当月实得奖励收入（介绍奖、培育奖等工资性收入），并非其销售额的10%。</p>
+176|        <table class="table">
+177|          <tr><th>月份</th><th>基数(奖励收入)</th><th>待遇</th><th>状态</th></tr>
+   |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+178|          <tr v-for="a in allowances" :key="a.id">
+179|            <td>{{ a.month }}</td><td>¥{{ fmtMoney(a.valid_perf) }}</td>[39m
+  Plugin: [35mvite:vue[39m
+  File: [36mC:/Users/Administrator/CodeBuddy/20260829144344/web/src/views/Mine.vue[39m
+[2m03:20:13[22m [33m[1m[vite][22m[39m [33mwarning: <tr> cannot be child of <table>, according to HTML specifications. This can cause hydration errors or potentially disrupt future functionality.
+27 |  
+28 |        <table class="table">
+29 |          <tr><th>单号</th><th>学员</th><th>产品</th><th>金额</th><th>推荐人</th><th>状态</th><th>操作</th></tr>
+   |          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+30 |          <tr v-for="o in orders" :key="o.id">
+31 |            <td style="font-size:11px;">{{ o.order_no }}</td>[39m
+  Plugin: [35mvite:vue[39m
+  File: [36mC:/Users/Administrator/CodeBuddy/20260829144344/web/src/views/admin/OrdersAdmin.vue[39m
+[2m03:33:23[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/views/Courses.vue[22m
+[2m03:33:24[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/views/Courses.vue[22m
+[2m03:34:03[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/views/Courses.vue[22m
+[2m03:34:12[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/views/Courses.vue[22m
+[2m03:34:20[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/views/Courses.vue?vue&type=style&index=0&scoped=5961144f&lang.css[22m
+[2m03:34:45[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/views/CourseDetail.vue[22m
+[2m03:34:45[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/views/CourseDetail.vue[22m
+[2m03:34:55[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/views/CourseDetail.vue[22m
+[2m03:35:03[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/views/CourseDetail.vue[22m
+[2m03:35:10[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/views/CourseDetail.vue[22m

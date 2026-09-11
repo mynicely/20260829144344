@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "抵现金流水",
+  "usingComponents": {
+    "empty-state": "/components/empty-state/empty-state"
+  }
+}

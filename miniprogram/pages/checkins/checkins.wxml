@@ -1,0 +1,16 @@
+<view class="page-paper">
+  <view class="card record-card" wx:for="{{list}}" wx:key="id">
+    <view class="row">
+      <view class="record-icon font-art">{{item.meta.icon}}</view>
+      <view class="flex-1">
+        <view class="record-name">{{item.meta.label}}</view>
+        <view class="tip">{{item.date}}</view>
+      </view>
+      <text class="record-reward">+¥{{item.reward}}</text>
+    </view>
+    <image wx:if="{{item.image}}" class="record-img" src="{{item.image}}" mode="widthFix" />
+    <view class="record-content" wx:if="{{item.content}}">{{item.content}}</view>
+  </view>
+  <empty-state wx:if="{{!loading && !list.length}}" type="none" tip="暂无打卡记录" />
+  <view class="safe-bottom"></view>
+</view>

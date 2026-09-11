@@ -1,0 +1,65 @@
+<view class="page-paper">
+  <!-- 用户信息卡片 -->
+  <view class="user-card">
+    <block wx:if="{{isLogin && user}}">
+      <view class="user-row">
+        <view class="avatar font-art">{{user.avatarChar}}</view>
+        <view class="flex-1">
+          <view class="user-name">{{user.nickname || '学员'}}</view>
+          <view class="user-sub">
+            <text wx:if="{{user.identity === 'promoter'}}" class="user-id-tag">分享推广</text>
+            <text wx:else class="user-id-tag user-id-tag-plain">纯学习</text>
+            <text class="user-phone" wx:if="{{user.phone}}">{{user.phone}}</text>
+          </view>
+        </view>
+        <view class="user-code" bindtap="onCopyCode">
+          <view class="user-code-label">邀请码</view>
+          <view class="user-code-val">{{user.invite_code}}</view>
+        </view>
+      </view>
+      <!-- 双资产（可提现分享奖励 / 抵现金余额 隔离展示） -->
+      <view class="wallet-row" bindtap="goIncome">
+        <view class="wallet-cell">
+          <view class="wallet-num">¥{{withdrawable}}</view>
+          <view class="wallet-label">可提现分享奖励</view>
+        </view>
+        <view class="wallet-divider"></view>
+        <view class="wallet-cell">
+          <view class="wallet-num">¥{{couponBalance}}</view>
+          <view class="wallet-label">抵现金余额</view>
+        </view>
+        <view class="wallet-arrow">›</view>
+      </view>
+      <!-- 纯学习/分享推广模式切换（仅前端视图，不改后端身份） -->
+      <view class="mode-row">
+        <view class="flex-1">
+          <view class="mode-title">纯学习模式</view>
+          <view class="mode-desc">仅查看课程与学习功能，不展示分享推广</view>
+        </view>
+        <switch checked="{{!isShareMode}}" color="#C82423" bindchange="onModeSwitch" />
+      </view>
+    </block>
+    <view wx:else class="login-entry" bindtap="goLogin">
+      <view class="avatar avatar-plain font-art">书</view>
+      <view class="login-tip">登录后查看我的课程与权益</view>
+      <view class="login-btn">立即登录</view>
+    </view>
+  </view>
+
+  <!-- 功能菜单 -->
+  <view class="menu">
+    <view class="menu-item" wx:for="{{menu}}" wx:key="key"
+      data-key="{{item.key}}" bindtap="onMenuTap">
+      <view class="menu-icon font-art {{item.key === 'invite' && !isShareMode ? 'menu-icon-disabled' : ''}}">{{item.icon}}</view>
+      <view class="menu-label">{{item.label}}</view>
+    </view>
+  </view>
+
+  <!-- 退出登录 -->
+  <view class="logout" wx:if="{{isLogin}}" bindtap="onLogout">退出登录</view>
+
+  <!-- 合规小字（评审要求，不允许删除） -->
+  <view class="compliance">{{compliance}}</view>
+  <view class="safe-bottom"></view>
+</view>
+<custom-tabbar current="{{3}}" />

@@ -1,0 +1,36 @@
+<view class="page-paper" wx:if="{{result}}">
+  <!-- 成绩大卡 -->
+  <view class="result-hero">
+    <view class="result-score">{{result.score}}</view>
+    <view class="result-label font-art">得分</view>
+    <view class="result-sub">答对 {{result.correct}} / {{result.total}} 题</view>
+  </view>
+
+  <!-- 逐题解析 -->
+  <view class="section-inline">
+    <view class="section-title font-art">题目解析</view>
+    <view class="section-seal"></view>
+  </view>
+  <view class="card q-item" wx:for="{{detail}}" wx:key="id">
+    <view class="q-head row">
+      <view class="q-no font-art">{{index + 1}}</view>
+      <view class="q-right-badge {{item.correct ? 'q-right' : 'q-wrong'}}">{{item.correct ? '答对' : '答错'}}</view>
+    </view>
+    <view class="q-text">{{item.question}}</view>
+    <view class="q-answer">
+      <text class="q-label">我的答案：</text>{{item.userAnswer || '未作答'}}
+    </view>
+    <view class="q-answer q-answer-right" wx:if="{{!item.correct}}">
+      <text class="q-label">正确答案：</text>{{item.rightAnswer}}
+    </view>
+    <view class="q-analysis" wx:if="{{item.analysis}}">
+      <text class="q-label">解析：</text>{{item.analysis}}
+    </view>
+  </view>
+
+  <view class="result-ops">
+    <gf-button type="outline" text="错题重练" bind:tap="goWrong" />
+    <gf-button type="primary" text="再来一组" bind:tap="again" />
+  </view>
+  <view class="safe-bottom"></view>
+</view>

@@ -1,0 +1,17 @@
+<view class="page-paper">
+  <view class="homework-card card" wx:for="{{list}}" wx:key="id">
+    <view class="row-between">
+      <text class="hw-type">{{item.task_type === 'calligraphy' ? '练字作业' : '学习心得'}}</text>
+      <text class="tip">+¥{{item.reward}} 抵用金</text>
+    </view>
+    <view class="tip" style="margin-top:8rpx;">{{item.date}}</view>
+    <image wx:if="{{item.image}}" class="hw-img" src="{{item.image}}" mode="widthFix" data-url="{{item.image}}" bindtap="onPreview" />
+    <view class="hw-content" wx:if="{{item.content}}">{{item.content}}</view>
+  </view>
+  <empty-state wx:if="{{!loading && !list.length}}" type="homework" tip="暂无作业，快去提交第一份作业吧" />
+
+  <view class="submit-fixed" wx:if="{{!list.length}}">
+    <gf-button type="primary" text="去提交作业" bind:tap="goSubmit" />
+  </view>
+  <view class="safe-bottom"></view>
+</view>

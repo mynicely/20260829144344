@@ -1,0 +1,45 @@
+<view class="page-paper">
+  <!-- 发帖按钮 -->
+  <view class="fab" bindtap="goPublish">
+    <text class="fab-plus">+</text>
+    <text>发帖</text>
+  </view>
+
+  <!-- 分类 Tab -->
+  <view class="cats">
+    <scroll-view scroll-x class="cats-scroll">
+      <view class="cat {{activeCat === 'all' ? 'cat-on' : ''}}" data-key="all" bindtap="onCatTap">全部</view>
+      <view class="cat {{activeCat === item.value ? 'cat-on' : ''}}" wx:for="{{categories}}" wx:key="value"
+        data-key="{{item.value}}" bindtap="onCatTap">{{item.label}}</view>
+    </scroll-view>
+  </view>
+
+  <!-- 帖子列表 -->
+  <view class="post-card card" wx:for="{{posts}}" wx:key="id"
+    data-id="{{item.id}}" bindtap="onPostTap" bindlongpress="onPostLongPress">
+    <view class="row-between">
+      <view class="row">
+        <view class="post-avatar font-art">{{item.avatarChar}}</view>
+        <view>
+          <view class="post-author">{{item.nickname || '学员'}}</view>
+          <view class="tip">{{item.created_at}}</view>
+        </view>
+      </view>
+      <view class="post-cat-tag" wx:if="{{item.category_label}}">{{item.category_label}}</view>
+    </view>
+    <view class="post-title ellipsis-2">{{item.title}}</view>
+    <view class="post-content ellipsis-2" wx:if="{{item.content}}">{{item.content}}</view>
+    <view class="post-imgs" wx:if="{{item.images.length}}">
+      <image wx:for="{{item.images}}" wx:for-item="img" wx:key="*this" class="post-img {{item.images.length === 1 ? 'post-img-single' : ''}}"
+        src="{{img}}" mode="aspectFill" />
+    </view>
+    <view class="post-stats row">
+      <text class="stat-item">♥ {{item.likes || 0}}</text>
+      <text class="stat-item">评论 {{item.comments || 0}}</text>
+    </view>
+  </view>
+  <empty-state wx:if="{{!loading && !posts.length}}" type="post" tip="暂无动态，快来发第一条帖子吧" />
+
+  <view class="safe-bottom"></view>
+</view>
+<custom-tabbar current="{{2}}" />

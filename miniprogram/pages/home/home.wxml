@@ -1,0 +1,93 @@
+<view class="page-paper">
+  <!-- 顶部合规提示（评审要求：页面顶部小字，不允许删除） -->
+  <view class="compliance">{{compliance}}</view>
+
+  <!-- Banner 轮播 -->
+  <swiper class="banner" indicator-dots autoplay circular interval="4000" indicator-color="rgba(255,255,255,0.4)" indicator-active-color="#fff">
+    <swiper-item wx:for="{{banners}}" wx:key="id">
+      <image wx:if="{{item.image}}" class="banner-img" src="{{item.image}}" mode="aspectFill" />
+      <view wx:else class="banner-fallback">
+        <view class="banner-fallback-title font-art">{{item.title || item.fallbackTitle}}</view>
+        <view class="banner-fallback-sub">{{item.subtitle || '翰墨书院 · 书法在线学习'}}</view>
+      </view>
+    </swiper-item>
+  </swiper>
+
+  <!-- 8宫格功能入口 -->
+  <view class="grid">
+    <view class="grid-item {{item.key === 'invite' && !isShareMode ? 'grid-item-disabled' : ''}}"
+      wx:for="{{grid}}" wx:key="key"
+      data-key="{{item.key}}" bindtap="onGridTap">
+      <view class="grid-icon font-art">{{item.icon}}</view>
+      <view class="grid-label">{{item.label}}</view>
+      <view class="grid-seal" wx:if="{{item.key === 'invite' && isShareMode}}"></view>
+    </view>
+  </view>
+
+  <!-- 课程卡片列表 -->
+  <view class="section">
+    <view class="section-title font-art">课程报名</view>
+    <view class="section-seal"></view>
+  </view>
+  <view class="course-card card" wx:for="{{courses}}" wx:key="id" data-id="{{item.id}}" bindtap="onCourseTap">
+    <image class="course-cover" src="{{item.cover}}" mode="aspectFill" wx:if="{{item.cover}}" />
+    <view class="course-cover-fallback" wx:else>
+      <text class="font-art">{{item.levelTag ? item.levelTag.text : '书法'}}</text>
+    </view>
+    <view class="course-info">
+      <view class="course-title ellipsis">{{item.title}}</view>
+      <view class="course-sub ellipsis">{{item.subtitle}}</view>
+      <view class="course-meta row">
+        <view class="course-price">¥{{item.price}}</view>
+        <view class="price-through">¥{{item.original_price}}</view>
+        <view class="course-badges">
+          <text class="badge" wx:if="{{item.is_group}}">拼团</text>
+          <text class="badge" wx:if="{{item.is_bargain}}">砍价</text>
+        </view>
+      </view>
+      <view class="course-btn" catchtap="onCourseTap" data-id="{{item.id}}">立即报名</view>
+    </view>
+    <seal-tag class="course-level-tag" status="{{item.level}}" wx:if="{{item.levelTag}}" />
+  </view>
+
+  <!-- 学员风采 -->
+  <view class="section">
+    <view class="section-title font-art">学员风采</view>
+    <view class="section-seal"></view>
+  </view>
+  <scroll-view scroll-x class="post-scroll" wx:if="{{posts.length}}">
+    <view class="post-item" wx:for="{{posts}}" wx:key="id" data-id="{{item.id}}" bindtap="onPostTap">
+      <image wx:if="{{item.images.length}}" class="post-img" src="{{item.images[0]}}" mode="aspectFill" />
+      <view wx:else class="post-img post-img-fallback font-art">书</view>
+      <view class="post-title ellipsis">{{item.title || '学员作品'}}</view>
+    </view>
+  </scroll-view>
+  <empty-state wx:else type="post" tip="暂无学员风采" />
+
+  <!-- 教学动态公告 -->
+  <view class="section">
+    <view class="section-title font-art">教学动态</view>
+    <view class="section-seal"></view>
+  </view>
+  <view class="card notice-card" wx:for="{{notices}}" wx:key="id" data-id="{{item.id}}" bindtap="onPostTap">
+    <view class="notice-dot"></view>
+    <view class="notice-title ellipsis">{{item.title || item.content}}</view>
+    <view class="notice-time">{{item.created_at}}</view>
+  </view>
+  <empty-state wx:if="{{!notices.length && !loading}}" type="none" tip="暂无动态" />
+
+  <view class="rules-entry" bindtap="goRules">
+    <text class="font-art">平台规则公示</text>
+    <text class="rules-entry-arrow">›</text>
+  </view>
+
+  <!-- 免费体验课预约入口 -->
+  <view class="reserve-entry" bindtap="goReserve">
+    <view class="reserve-entry-title font-art">免费体验课预约</view>
+    <view class="reserve-entry-sub">纠正执笔坐姿 · 基础笔画评估 · 定制学习规划</view>
+    <view class="btn-primary reserve-btn">立即预约</view>
+  </view>
+
+  <view class="safe-bottom"></view>
+</view>
+<custom-tabbar current="{{0}}" />

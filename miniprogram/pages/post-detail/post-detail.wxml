@@ -1,0 +1,50 @@
+<view class="page-paper" wx:if="{{post}}">
+  <!-- 帖子主体 -->
+  <view class="card">
+    <view class="row-between">
+      <view class="row">
+        <view class="post-avatar font-art">{{post.avatarChar}}</view>
+        <view>
+          <view class="post-author">{{post.nickname || '学员'}}</view>
+          <view class="tip">{{post.created_at}}</view>
+        </view>
+      </view>
+      <view class="manage-btn" wx:if="{{isMine}}" bindtap="onManage">管理</view>
+    </view>
+    <view class="post-title">{{post.title}}</view>
+    <view class="post-content" wx:if="{{post.content}}">{{post.content}}</view>
+    <view class="post-imgs" wx:if="{{post.images.length}}">
+      <image wx:for="{{post.images}}" wx:for-item="img" wx:key="*this" class="post-img {{post.images.length === 1 ? 'post-img-single' : ''}}"
+        src="{{img}}" mode="aspectFill" data-url="{{img}}" bindtap="onPreview" />
+    </view>
+    <view class="post-like {{post.liked ? 'post-like-on' : ''}}" bindtap="onLike">
+      {{post.liked ? '♥ 已点赞' : '♡ 点赞'}} {{post.likes || 0}}
+    </view>
+  </view>
+
+  <!-- 评论区 -->
+  <view class="section-inline">
+    <view class="section-title font-art">评论 {{comments.length}}</view>
+    <view class="section-seal"></view>
+  </view>
+  <view class="card comment-item" wx:for="{{comments}}" wx:key="id">
+    <view class="row">
+      <view class="comment-avatar font-art">{{item.avatarChar}}</view>
+      <view class="flex-1">
+        <view class="comment-name">{{item.nickname || '学员'}}</view>
+        <view class="comment-content">{{item.content}}</view>
+        <view class="tip">{{item.created_at}}</view>
+      </view>
+    </view>
+  </view>
+  <empty-state wx:if="{{!comments.length}}" type="comment" tip="还没有评论，快来抢沙发" />
+
+  <view class="safe-bottom"></view>
+
+  <!-- 底部评论栏 -->
+  <view class="comment-bar">
+    <input class="comment-input" placeholder="友善评论，文明交流" value="{{comment}}"
+      focus="{{commentFocus}}" bindinput="onCommentInput" confirm-type="send" bindconfirm="onSendComment" />
+    <view class="comment-send" bindtap="onSendComment">{{commenting ? '发送中' : '发送'}}</view>
+  </view>
+</view>

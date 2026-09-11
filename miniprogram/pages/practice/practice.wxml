@@ -1,0 +1,52 @@
+<view class="page-paper">
+  <!-- 综合练习 -->
+  <view class="hero">
+    <view class="hero-title font-art">综合练习</view>
+    <view class="hero-sub">随机抽题 10 道，覆盖全部课程知识点</view>
+    <view class="btn-primary hero-btn" bindtap="onComprehensive">开始练习</view>
+  </view>
+
+  <!-- 按课程练习 -->
+  <view class="section-inline" wx:if="{{courses.length}}">
+    <view class="section-title font-art">按课程练习</view>
+    <view class="section-seal"></view>
+  </view>
+  <view class="card course-row row-between" wx:for="{{courses}}" wx:key="id" data-id="{{item.id}}" bindtap="onCoursePractice">
+    <view class="row">
+      <view class="course-icon font-art">题</view>
+      <view>
+        <view class="course-name">{{item.title}}</view>
+        <view class="tip">共 {{item.qcount}} 题</view>
+      </view>
+    </view>
+    <text class="go-icon">›</text>
+  </view>
+
+  <!-- 练习历史 -->
+  <view class="section-inline" wx:if="{{history.length}}">
+    <view class="section-title font-art">练习历史</view>
+    <view class="section-seal"></view>
+  </view>
+  <view class="card history-row row-between" wx:for="{{history}}" wx:key="id">
+    <view>
+      <view class="history-title">{{item.course_title}}</view>
+      <view class="tip">{{item.created_at}} · 用时 {{item.duration}}s · {{item.correct}}/{{item.total}} 对</view>
+    </view>
+    <view class="score {{item.score >= 60 ? 'score-pass' : 'score-fail'}}">{{item.score}}分</view>
+  </view>
+  <empty-state wx:if="{{!loading && !history.length}}" type="none" tip="暂无练习记录" />
+
+  <!-- 错题本 -->
+  <view class="card wrong-entry" bindtap="goWrong">
+    <view class="row">
+      <view class="course-icon font-art">错</view>
+      <view class="flex-1">
+        <view class="course-name">我的错题本</view>
+        <view class="tip">集中复习做错的题目，巩固薄弱点</view>
+      </view>
+      <text class="go-icon">›</text>
+    </view>
+  </view>
+
+  <view class="safe-bottom"></view>
+</view>

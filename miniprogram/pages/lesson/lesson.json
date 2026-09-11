@@ -1,0 +1,8 @@
+{
+  "navigationBarTitleText": "线上课程",
+  "usingComponents": {
+    "seal-tag": "/components/seal-tag/seal-tag",
+    "custom-tabbar": "/components/custom-tabbar/custom-tabbar",
+    "empty-state": "/components/empty-state/empty-state"
+  }
+}

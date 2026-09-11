@@ -1,0 +1,39 @@
+<view class="page-paper">
+  <view class="card hatch-intro">
+    <view class="section-inline">
+      <view class="section-title font-art">孵化规则</view>
+      <view class="section-seal"></view>
+    </view>
+    <view class="tip">
+      每名被帮扶新人名下前 {{slotLimit}} 名名额全部孵化合格，即解锁培育奖并发放。孵化进度以管理端考核结果为准。
+    </view>
+  </view>
+
+  <!-- 孵化进度列表 -->
+  <view class="card hatch-item" wx:for="{{list}}" wx:key="id">
+    <view class="row-between">
+      <view class="hatch-name">新人 #{{item.newbie_id}}</view>
+      <view class="hatch-status">
+        <text wx:if="{{item.status === 'paid'}}" class="hatch-paid">已发放 ¥{{item.amount || 200}}</text>
+        <text wx:elif="{{item.status === 'full'}}" class="hatch-full">已解锁待发放</text>
+        <text wx:else class="hatch-locked">解锁中</text>
+      </view>
+    </view>
+    <view class="hatch-progress">
+      <view class="hatch-fill" style="width: {{item.hatched / slotLimit * 100}}%"></view>
+    </view>
+    <view class="row-between">
+      <text class="tip">已孵化合格 {{item.hatched}} / {{slotLimit}} 名管培生</text>
+      <seal-tag status="{{item.status === 'paid' ? 'approved' : (item.status === 'full' ? 'success' : 'probation')}}"
+        text="{{item.status === 'paid' ? '已发放' : (item.status === 'full' ? '已解锁' : '解锁中')}}" />
+    </view>
+  </view>
+  <empty-state wx:if="{{!loading && !list.length}}" type="none" tip="暂无孵化任务" />
+
+  <view class="trainee-entry" bindtap="goTrainees">
+    <text class="font-art">查看管培生状态</text>
+    <text class="trainee-entry-arrow">›</text>
+  </view>
+
+  <view class="safe-bottom"></view>
+</view>

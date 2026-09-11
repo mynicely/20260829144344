@@ -1,0 +1,42 @@
+<view class="page-paper">
+  <!-- 发起砍价 -->
+  <view class="card">
+    <view class="section-inline">
+      <view class="section-title font-art">发起砍价</view>
+      <view class="section-seal"></view>
+    </view>
+    <view class="tip bargain-rule">邀请好友帮砍，砍到底价即可优惠购课；每人限参与一次，24小时内有效。</view>
+    <picker range="{{courses}}" range-key="title" value="{{selectedCourse ? 0 : -1}}" bindchange="onCourseChange">
+      <view class="picker-row {{selectedCourse ? '' : 'picker-placeholder'}}">
+        {{selectedCourse ? selectedCourse.title : '请选择课程'}}
+        <text class="picker-arrow">›</text>
+      </view>
+    </picker>
+    <gf-button type="primary" text="{{starting ? '发起中…' : '发起砍价'}}"
+      disabled="{{starting}}" loading="{{starting}}" bind:tap="onStartTap" />
+  </view>
+
+  <!-- 我的砍价 -->
+  <view class="section-inline">
+    <view class="section-title font-art">我的砍价</view>
+    <view class="section-seal"></view>
+  </view>
+  <view class="card bargain-card" wx:for="{{bargains}}" wx:key="id" data-id="{{item.id}}" bindtap="onBargainTap">
+    <view class="row-between">
+      <view class="bargain-title">{{item.course_title}}</view>
+      <seal-tag status="{{item.status}}" />
+    </view>
+    <view class="bargain-price-row row">
+      <view class="bargain-price">当前价 <text class="price">¥{{item.current_price}}</text></view>
+      <view class="bargain-floor">底价 ¥{{item.floor_price}}</view>
+    </view>
+    <view class="row-between">
+      <text class="tip">已{{item.helper_count || 0}}人帮砍</text>
+      <text class="countdown" wx:if="{{item.status === 'active' && item.expire_at}}">剩 {{item.remainText}}</text>
+    </view>
+  </view>
+  <empty-state wx:if="{{!bargains.length}}" type="none" tip="暂无进行中的砍价" />
+
+  <view class="compliance">砍价属于优惠活动，该订单不计分享奖励</view>
+  <view class="safe-bottom"></view>
+</view>

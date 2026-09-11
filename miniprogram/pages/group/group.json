@@ -1,0 +1,9 @@
+{
+  "navigationBarTitleText": "拼团购课",
+  "usingComponents": {
+    "seal-tag": "/components/seal-tag/seal-tag",
+    "gf-modal": "/components/gf-modal/gf-modal",
+    "gf-button": "/components/gf-button/gf-button",
+    "empty-state": "/components/empty-state/empty-state"
+  }
+}

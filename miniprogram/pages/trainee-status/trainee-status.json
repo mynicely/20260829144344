@@ -1,0 +1,9 @@
+{
+  "navigationBarTitleText": "管培生状态",
+  "usingComponents": {
+    "seal-tag": "/components/seal-tag/seal-tag",
+    "gf-button": "/components/gf-button/gf-button",
+    "gf-modal": "/components/gf-modal/gf-modal",
+    "empty-state": "/components/empty-state/empty-state"
+  }
+}

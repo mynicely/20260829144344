@@ -1,0 +1,38 @@
+.hero {
+  margin: 20rpx 24rpx;
+  padding: 40rpx 32rpx;
+  border-radius: 16rpx;
+  background: linear-gradient(150deg, #4A6374 0%, #6B8798 100%);
+  color: #F8F5F0;
+}
+.hero-course { font-size: 36rpx; font-weight: 600; letter-spacing: 2rpx; }
+.hero-price-row { margin: 16rpx 0 20rpx; }
+.hero-now { font-size: 72rpx; font-weight: 800; color: #FFD54F; }
+.hero-origin { color: rgba(255,255,255,0.7); margin-left: 16rpx; font-size: 28rpx; }
+.progress-bar { height: 14rpx; background: rgba(255,255,255,0.2); border-radius: 8rpx; overflow: hidden; }
+.progress-fill { height: 100%; background: #FFD54F; border-radius: 8rpx; }
+.hero-meta { margin-top: 16rpx; font-size: 26rpx; }
+.hero-countdown { color: #FFD54F; }
+.hero-floor { margin-top: 12rpx; font-size: 24rpx; opacity: 0.85; }
+
+.action-card { display: flex; flex-direction: column; gap: 16rpx; }
+
+.section-inline { display: flex; align-items: center; margin: 30rpx 28rpx 4rpx; }
+.section-title { font-size: 34rpx; font-weight: 600; letter-spacing: 4rpx; }
+.section-seal { width: 36rpx; height: 8rpx; margin-left: 14rpx; background: var(--color-cinnabar); border-radius: 4rpx; opacity: 0.8; }
+
+.helper-row { padding: 18rpx 0; border-bottom: 1rpx dashed #F0EAE0; }
+.helper-row:last-child { border-bottom: none; }
+.helper-avatar {
+  width: 64rpx; height: 64rpx; line-height: 64rpx;
+  text-align: center; font-size: 28rpx;
+  background: rgba(74, 99, 116, 0.15); color: var(--color-stone);
+  border-radius: 50%; margin-right: 16rpx;
+}
+.helper-name { font-size: 26rpx; color: var(--color-stone); }
+.helper-cut { color: var(--color-cinnabar); font-size: 26rpx; font-weight: 500; }
+.page-paper { padding-bottom: 40rpx; }
+.pay-info { padding: 20rpx 40rpx 8rpx; font-size: 28rpx; }
+.pay-amount { margin-bottom: 16rpx; }
+.pay-line { padding: 8rpx 0; color: #444; word-break: break-all; }
+.pay-tip { padding-top: 12rpx; color: var(--color-gray-tip); font-size: 24rpx; }

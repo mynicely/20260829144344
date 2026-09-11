@@ -1,0 +1,25 @@
+<view class="page-paper">
+  <view class="order-card card" wx:for="{{orders}}" wx:key="id">
+    <view class="row-between">
+      <text class="order-title ellipsis">{{item.course_title || '课程订单'}}</text>
+      <seal-tag status="{{item.status}}" />
+    </view>
+    <view class="order-meta">
+      <view class="row-between">
+        <text class="tip">订单号：{{item.order_no}}</text>
+        <text class="price">¥{{item.amountText}}</text>
+      </view>
+      <view class="row-between">
+        <text class="tip">下单时间：{{item.created_at}}</text>
+        <text class="tip" wx:if="{{item.paid_at}}">付款：{{item.paid_at}}</text>
+      </view>
+    </view>
+    <view class="order-ops" wx:if="{{item.status === 'pending'}}">
+      <view class="op-btn ghost" data-no="{{item.order_no}}" bindtap="onCloseTap">关闭订单</view>
+      <view class="op-btn main" data-no="{{item.order_no}}" bindtap="onPayTap">去支付</view>
+    </view>
+  </view>
+  <empty-state wx:if="{{!loading && !orders.length}}" type="order" tip="暂无订单，快去选课吧" />
+
+  <view class="safe-bottom"></view>
+</view>

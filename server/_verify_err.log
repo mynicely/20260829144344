@@ -1,0 +1,17 @@
+[uncaughtException] Error: listen EADDRINUSE: address already in use :::3101
+    at Server.setupListenHandle [as _listen2] (node:net:2324:16)
+    at listenInCluster (node:net:2433:12)
+    at Server.listen (node:net:2558:7)
+    at app.listen (C:\Users\Administrator\CodeBuddy\20260829144344\server\node_modules\express\lib\application.js:635:24)
+    at Object.<anonymous> (C:\Users\Administrator\CodeBuddy\20260829144344\server\src\index.js:3475:5)
+    at Module._compile (node:internal/modules/cjs/loader:1929:14)
+    at Object..js (node:internal/modules/cjs/loader:2060:10)
+    at Module.load (node:internal/modules/cjs/loader:1651:32)
+    at Module._load (node:internal/modules/cjs/loader:1443:12)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:261:19) {
+  code: 'EADDRINUSE',
+  errno: -4091,
+  syscall: 'listen',
+  address: '::',
+  port: 3101
+}

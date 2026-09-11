@@ -1,0 +1,20 @@
+<view class="page-paper">
+  <!-- 双 Tab：简易版 / 完整版 -->
+  <view class="tabs">
+    <view class="tab {{tab === 'simple' ? 'tab-on' : ''}}" data-version="simple" bindtap="onTabTap">简易版</view>
+    <view class="tab {{tab === 'full' ? 'tab-on' : ''}}" data-version="full" bindtap="onTabTap">完整版</view>
+  </view>
+
+  <view class="rules-head">
+    <view class="rules-title font-art">翰墨书院平台规则</view>
+    <view class="rules-update" wx:if="{{updatedAt}}">更新于 {{updatedAt}}</view>
+  </view>
+
+  <view class="card rules-body" wx:if="{{!loading}}">
+    <text user-select>{{content}}</text>
+  </view>
+  <view class="tip" style="text-align:center;padding:40rpx;" wx:else>规则加载中...</view>
+
+  <view class="compliance">以上规则为本平台现行有效规则，更新后以最新公示版本为准</view>
+  <view class="safe-bottom"></view>
+</view>

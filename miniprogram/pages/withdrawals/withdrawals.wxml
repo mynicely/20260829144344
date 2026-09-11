@@ -1,0 +1,53 @@
+<view class="page-paper">
+  <!-- 可提现余额 -->
+  <view class="hero">
+    <view class="hero-label">可提现分享奖励</view>
+    <view class="hero-num">¥{{wallet.withdrawable || 0}}</view>
+    <view class="hero-tip">累计提现 ¥{{wallet.withdrawn || 0}} · 审核中 ¥{{wallet.applied || 0}}</view>
+  </view>
+
+  <!-- 提现申请 -->
+  <view class="card">
+    <view class="section-inline">
+      <view class="section-title font-art">申请提现</view>
+      <view class="section-seal"></view>
+    </view>
+    <view class="form-item">
+      <text class="form-label">金额</text>
+      <input class="form-input" type="number" placeholder="单笔最低 ¥{{minWithdraw}}" value="{{amount}}" data-field="amount" bindinput="onInput" />
+      <view class="all-btn" bindtap="onAll">全部</view>
+    </view>
+    <picker range="{{payTypes}}" value="{{payTypeIndex}}" bindchange="onPayTypeChange">
+      <view class="form-item">
+        <text class="form-label">收款方式</text>
+        <view class="form-value">{{payTypes[payTypeIndex]}}<text class="picker-arrow">›</text></view>
+      </view>
+    </picker>
+    <view class="form-item">
+      <text class="form-label">收款账号</text>
+      <input class="form-input" placeholder="微信号 / 支付宝账号 / 银行卡号" value="{{account}}" data-field="account" bindinput="onInput" />
+    </view>
+    <view class="form-item">
+      <text class="form-label">收款人姓名</text>
+      <input class="form-input" placeholder="请输入真实姓名" value="{{realName}}" data-field="realName" bindinput="onInput" />
+    </view>
+    <gf-button type="primary" text="{{submitting ? '提交中…' : '确认提现'}}" disabled="{{submitting}}" loading="{{submitting}}" bind:tap="onSubmit" />
+    <view class="tip" style="margin-top:16rpx;">提现申请提交后由平台审核发放，请确保信息准确</view>
+  </view>
+
+  <!-- 提现记录 -->
+  <view class="section-inline" wx:if="{{records.length}}">
+    <view class="section-title font-art">提现记录</view>
+    <view class="section-seal"></view>
+  </view>
+  <view class="card record-row row-between" wx:for="{{records}}" wx:key="id">
+    <view>
+      <view class="record-amount">-¥{{item.amount}}</view>
+      <view class="tip">{{item.pay_type}} · {{item.created_at}}</view>
+    </view>
+    <seal-tag status="{{item.status}}" text="{{item.status === 'paid' ? '已发放' : (item.status === 'pending' ? '审核中' : (item.status === 'approved' ? '已通过' : (item.status === 'rejected' ? '已驳回' : item.status)))}}" />
+  </view>
+  <empty-state wx:if="{{!records.length}}" type="none" tip="暂无提现记录" />
+
+  <view class="safe-bottom"></view>
+</view>

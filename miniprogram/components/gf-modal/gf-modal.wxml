@@ -1,0 +1,14 @@
+<view wx:if="{{visible}}" class="gf-modal-mask" bindtap="onCancel">
+  <view class="gf-modal" catchtap="noop">
+    <view class="gf-modal-head">
+      <view class="gf-modal-title font-art">{{title}}</view>
+      <view class="gf-modal-seal"></view>
+    </view>
+    <view class="gf-modal-body" wx:if="{{content}}">{{content}}</view>
+    <slot></slot>
+    <view class="gf-modal-foot">
+      <view class="gf-modal-btn gf-modal-btn-cancel" wx:if="{{showCancel}}" bindtap="onCancel">{{cancelText}}</view>
+      <view class="gf-modal-btn {{danger ? 'gf-modal-btn-danger' : 'gf-modal-btn-ok'}}" bindtap="onConfirm">{{confirmText}}</view>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,88 @@
+<view class="page-paper">
+  <!-- 开团表单 -->
+  <view class="card">
+    <view class="section-inline">
+      <view class="section-title font-art">我要开团</view>
+      <view class="section-seal"></view>
+    </view>
+    <picker range="{{courses}}" range-key="title" value="{{selectedCourse ? 0 : -1}}" bindchange="onCourseChange">
+      <view class="picker-row {{selectedCourse ? '' : 'picker-placeholder'}}">
+        {{selectedCourse ? selectedCourse.title : '请选择课程'}}
+        <text class="picker-arrow">›</text>
+      </view>
+    </picker>
+
+    <block wx:if="{{tiers.length}}">
+      <view class="tier-list">
+        <view class="tier-row {{tierCount === item.n ? 'tier-row-on' : ''}} {{bestTierN === item.n ? 'tier-row-hot' : ''}}"
+          wx:for="{{tiers}}" wx:key="n"
+          data-n="{{item.n}}" bindtap="onTierTap">
+          <view class="flex-1">
+            <view class="tier-name">{{item.n}}人团
+              <text class="tag-gold" wx:if="{{bestTierN === item.n}}">最划算</text>
+            </view>
+            <view class="tier-benefit" wx:if="{{item.services || item.gift}}">{{item.services || ''}}{{item.services && item.gift ? '，' : ''}}{{item.gift || ''}}</view>
+          </view>
+          <view class="tier-right">
+            <view class="price">¥{{item.price}}</view>
+            <view class="tip">立省 ¥{{selectedCourse ? (selectedCourse.price - item.price) : 0}}</view>
+          </view>
+        </view>
+      </view>
+    </block>
+    <view class="tip" wx:else>当前未设置拼团档位价，按默认 {{groupMin}} 人成团、固定抵扣开团</view>
+
+    <gf-button type="primary" text="{{creating ? '开团中…' : (tierCount ? '我要开团（' + tierCount + '人团）' : '我要开团')}}"
+      disabled="{{creating}}" loading="{{creating}}" bind:tap="onCreateTap" />
+  </view>
+
+  <!-- 正在拼团 -->
+  <view class="section-inline">
+    <view class="section-title font-art">正在拼团</view>
+    <view class="section-seal"></view>
+  </view>
+  <view class="card group-card" wx:for="{{groups}}" wx:key="id" data-id="{{item.id}}" bindtap="onGroupTap">
+    <view class="group-head row-between">
+      <view class="group-title">{{item.course_title}}</view>
+      <seal-tag status="opening" />
+    </view>
+    <view class="group-price-row row">
+      <text class="price" wx:if="{{item.tier_price}}">拼团价 ¥{{item.tier_price}}</text>
+      <text class="tip">原价 ¥{{item.price}}</text>
+    </view>
+    <view class="progress-bar">
+      <view class="progress-fill" style="width: {{item.member_count / item.min_count * 100}}%"></view>
+    </view>
+    <view class="row-between">
+      <text class="tip">已{{item.member_count}}/{{item.min_count}}人，还差 {{item.min_count - item.member_count > 0 ? item.min_count - item.member_count : 0}} 人</text>
+      <text class="countdown" wx:if="{{item.expire_at}}">剩 {{item.remainText}}</text>
+    </view>
+  </view>
+  <empty-state wx:if="{{!groups.length}}" type="none" tip="暂无进行中的拼团" />
+
+  <view class="compliance">拼团、砍价属于优惠活动，该订单不计分享奖励</view>
+  <view class="safe-bottom"></view>
+
+  <!-- promoter 分享身份确认弹窗（业务逻辑与 web 端一致，仅 UI 美化） -->
+  <gf-modal visible="{{promoterModal}}" title="确认参与拼团"
+    content="您当前是分享推广身份，参与拼团优惠，本订单将放弃全部分享奖励，不会产生推广收益，也不会更新您的分享推广身份，确认继续下单？"
+    confirmText="确认下单" cancelText="取消" danger
+    bind:confirm="onPromoterConfirm" bind:cancel="onPromoterCancel" />
+
+  <!-- 开团二次确认 -->
+  <gf-modal visible="{{confirmCreateModal}}" title="确认发起拼团"
+    content="确认发起 {{tierCount || groupMin}} 人团？开团需先支付购课款，管理员确认到账后开团成功；若未成团，预付款将原路退回。"
+    confirmText="确认开团" cancelText="再想想" danger
+    bind:confirm="doCreate" bind:cancel="onCancelCreate" />
+
+  <!-- 线下收款信息 -->
+  <gf-modal visible="{{payModalVisible}}" title="线下转账付款" confirmText="我已转账，等待开团" showCancel="{{false}}" bind:confirm="closePayModal">
+    <view class="pay-info">
+      <view class="pay-amount">应付金额 <text class="price">¥{{payAmount}}</text></view>
+      <view class="pay-line" wx:if="{{receiveInfo.wechatAccount}}">微信收款：{{receiveInfo.wechatAccount}}</view>
+      <view class="pay-line" wx:if="{{receiveInfo.alipayAccount}}">支付宝：{{receiveInfo.alipayAccount}}</view>
+      <view class="pay-line" wx:if="{{receiveInfo.bankName}}">银行：{{receiveInfo.bankName}} {{receiveInfo.bankAccount}}（{{receiveInfo.bankHolder}}）</view>
+      <view class="pay-tip">转账后请等待管理员确认到账，确认后自动开团</view>
+    </view>
+  </gf-modal>
+</view>

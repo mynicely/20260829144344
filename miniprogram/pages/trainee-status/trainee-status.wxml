@@ -1,0 +1,73 @@
+<view class="page-paper">
+  <!-- 名额进度 -->
+  <view class="hero">
+    <view class="hero-title font-art">留店名额进度</view>
+    <view class="slot-num">{{slotProgress.kept || 0}} / {{slotProgress.slotLimit || 2}}</view>
+    <view class="progress-bar">
+      <view class="progress-fill" style="width: {{slotProgress.pctValue}}%"></view>
+    </view>
+    <view class="hero-tip" wx:if="{{slotProgress.unlocked}}">名额已满，可解锁培育奖</view>
+    <view class="hero-tip" wx:else>还差 {{slotProgress.need}} 名有效名额，保持管培生正常在岗</view>
+  </view>
+
+  <!-- 管培生列表 -->
+  <view class="section-inline" wx:if="{{trainees.length}}">
+    <view class="section-title font-art">管培生列表</view>
+    <view class="section-seal"></view>
+  </view>
+  <view class="card trainee-card" wx:for="{{trainees}}" wx:key="id">
+    <view class="row-between">
+      <view class="row">
+        <view class="trainee-avatar font-art">{{item.avatarChar}}</view>
+        <view>
+          <view class="trainee-name">{{item.nickname || '管培生'}}</view>
+          <view class="tip">{{item.maskPhone || '未留手机号'}}</view>
+        </view>
+      </view>
+      <view class="trainee-seals">
+        <seal-tag text="{{item.slot.text}}" cls="{{item.slot.cls}}" />
+        <seal-tag text="{{item.month.text}}" cls="{{item.month.cls}}" />
+      </view>
+    </view>
+
+    <!-- 滚动考核周期（数据来自后端 finished_cycle/cycle_end_at/cycle_remaining_days） -->
+    <view class="cycle-box">
+      <view class="cycle-row row-between">
+        <text>考核周期</text>
+        <text>第 {{item.cycle}} 轮</text>
+      </view>
+      <view class="cycle-row row-between">
+        <text>本周期考核截止</text>
+        <text class="cycle-end">{{item.cycle_end_at || '--'}}</text>
+      </view>
+      <view class="cycle-row row-between">
+        <text>剩余天数</text>
+        <text class="{{item.cycle_remaining_days <= 7 ? 'cycle-urgent' : ''}}">{{item.cycle_remaining_days}} 天</text>
+      </view>
+    </view>
+
+    <!-- 补位次数与操作（数据全部来自后端 reserve_count/reserve_deadline/slot_status） -->
+    <view class="fill-row row-between" wx:if="{{item.slot_status === 'frozen'}}">
+      <text class="tip">{{item.fillText}}</text>
+      <gf-button type="outline" size="small" text="{{filling === item.id ? '补位中…' : '发起补位'}}"
+        disabled="{{filling === item.id}}" loading="{{filling === item.id}}"
+        data-id="{{item.id}}" bind:tap="onFillTap" />
+    </view>
+    <view class="tip" wx:else>{{item.fillText}}</view>
+  </view>
+  <empty-state wx:if="{{!loading && !trainees.length}}" type="none" tip="暂无管培生记录" />
+
+  <view class="hatch-entry" bindtap="goHatch">
+    <text class="font-art">查看孵化任务进度</text>
+    <text class="hatch-entry-arrow">›</text>
+  </view>
+
+  <view class="compliance">考核周期、补位次数与截止时间均以平台记录为准</view>
+  <view class="safe-bottom"></view>
+
+  <!-- 补位确认 -->
+  <gf-modal visible="{{fillModal}}" title="发起补位"
+    content="发起补位将消耗 1 次补位机会（每人最多 2 次），确认对该管培生发起补位？"
+    confirmText="确认补位" cancelText="取消" danger
+    bind:confirm="doFill" bind:cancel="onFillCancel" />
+</view>

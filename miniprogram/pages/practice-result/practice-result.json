@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "练习成绩",
+  "usingComponents": {
+    "gf-button": "/components/gf-button/gf-button"
+  }
+}

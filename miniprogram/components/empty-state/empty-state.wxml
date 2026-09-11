@@ -1,0 +1,11 @@
+<view class="empty">
+  <!-- 简约国风插画：水墨圆 + 墨点 -->
+  <view class="art">
+    <view class="art-circle"></view>
+    <view class="art-dot art-dot-1"></view>
+    <view class="art-dot art-dot-2"></view>
+    <view class="art-brush"></view>
+  </view>
+  <view class="art-text font-art">{{art}}</view>
+  <view class="tip">{{tip}}</view>
+</view>

@@ -1,0 +1,50 @@
+<view class="page-paper">
+  <!-- 双资产隔离展示：可提现分享奖励 vs 抵现金余额 -->
+  <view class="wallet">
+    <view class="wallet-item">
+      <view class="wallet-label">可提现分享奖励</view>
+      <view class="wallet-num">¥{{wallet.withdrawable || 0}}</view>
+      <view class="wallet-withdraw" bindtap="goWithdraw">申请提现</view>
+    </view>
+    <view class="wallet-divider"></view>
+    <view class="wallet-item">
+      <view class="wallet-label">抵现金余额</view>
+      <view class="wallet-num wallet-num-coupon">¥{{couponBalance}}</view>
+      <view class="wallet-tip">仅抵扣学费，不支持提现</view>
+    </view>
+  </view>
+
+  <!-- 结算口径说明 -->
+  <view class="card settle-note">
+    <view class="section-inline">
+      <view class="section-title font-art">结算说明</view>
+      <view class="section-seal"></view>
+    </view>
+    <view class="note-row" wx:for="{{incomeTypes}}" wx:key="key">
+      <text class="note-name">{{item.label}}</text>
+      <text class="note-desc">{{item.settle}}</text>
+    </view>
+  </view>
+
+  <!-- 分类 Tab -->
+  <view class="tabs">
+    <view class="tab {{activeTab === item.key ? 'tab-on' : ''}}" wx:for="{{tabs}}" wx:key="key"
+      data-key="{{item.key}}" bindtap="onTabTap">{{item.label}}</view>
+  </view>
+
+  <!-- 明细列表 -->
+  <view class="card item-row" wx:for="{{list}}" wx:key="id">
+    <view class="flex-1">
+      <view class="item-title">{{item.remark || item.title || activeTabLabel}}</view>
+      <view class="tip">{{item.date}}</view>
+    </view>
+    <view class="item-right">
+      <view class="item-amount {{item.amount >= 0 ? 'item-in' : 'item-out'}}">{{item.amount >= 0 ? '+' : ''}}{{item.amount}}</view>
+      <view class="tip">{{item.statusText}}</view>
+    </view>
+  </view>
+  <empty-state wx:if="{{!loading && !list.length}}" type="income" tip="暂无明细" />
+
+  <view class="compliance">推广权益为平台赠与，具体以平台规则公示为准</view>
+  <view class="safe-bottom"></view>
+</view>

@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "收益明细",
+  "usingComponents": {
+    "seal-tag": "/components/seal-tag/seal-tag",
+    "empty-state": "/components/empty-state/empty-state"
+  }
+}

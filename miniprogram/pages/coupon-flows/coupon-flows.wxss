@@ -1,0 +1,27 @@
+.balance-hero {
+  margin: 20rpx 24rpx;
+  padding: 44rpx 28rpx;
+  border-radius: 16rpx;
+  background: linear-gradient(150deg, #4A6374 0%, #6B8798 100%);
+  color: #F8F5F0;
+  text-align: center;
+}
+.balance-label { font-size: 26rpx; letter-spacing: 6rpx; opacity: 0.85; }
+.balance-num { font-size: 88rpx; font-weight: 800; color: #FFD54F; margin: 14rpx 0; }
+.balance-sub { font-size: 24rpx; opacity: 0.8; }
+
+.earned-card { margin-top: 20rpx; }
+.earned-label { font-size: 28rpx; }
+.earned-num { font-size: 36rpx; font-weight: 700; color: var(--color-cinnabar); }
+
+.section-inline { display: flex; align-items: center; margin: 30rpx 28rpx 4rpx; }
+.section-title { font-size: 34rpx; font-weight: 600; letter-spacing: 4rpx; }
+.section-seal { width: 36rpx; height: 8rpx; margin-left: 14rpx; background: var(--color-cinnabar); border-radius: 4rpx; opacity: 0.8; }
+
+.flow-row { display: flex; align-items: center; justify-content: space-between; margin-top: 20rpx; }
+.flow-type { font-size: 28rpx; font-weight: 600; margin-bottom: 4rpx; }
+.flow-right { text-align: right; }
+.flow-amount { font-size: 34rpx; font-weight: 700; }
+.flow-in { color: var(--color-cinnabar); }
+.flow-out { color: #888; }
+.page-paper { padding-bottom: 40rpx; }

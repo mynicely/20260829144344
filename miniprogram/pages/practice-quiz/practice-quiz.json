@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "答题练习",
+  "usingComponents": {
+    "gf-modal": "/components/gf-modal/gf-modal"
+  }
+}

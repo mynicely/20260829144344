@@ -1,0 +1,47 @@
+<wxs src="./practice-quiz.wxs" module="q" />
+<view class="page-paper" wx:if="{{questions.length}}">
+  <!-- 顶部信息条 -->
+  <view class="topbar">
+    <view class="progress-text">{{current + 1}} / {{questions.length}}</view>
+    <view class="progress-bar">
+      <view class="progress-fill" style="width: {{(current + 1) / questions.length * 100}}%"></view>
+    </view>
+    <view class="elapsed">{{q.formatElapsed(elapsed)}}</view>
+  </view>
+
+  <!-- 题目区 -->
+  <view class="card quiz-card">
+    <view class="q-type">{{questions[current].type === 'multi' ? '多选题' : (questions[current].type === 'judge' ? '判断题' : '单选题')}}</view>
+    <view class="q-text">{{current + 1}}. {{questions[current].question}}</view>
+    <view class="option {{q.isSelected(answers, questions[current].id, item.k) ? 'option-on' : ''}}"
+      wx:for="{{questions[current].options}}" wx:key="k"
+      data-qid="{{questions[current].id}}" data-key="{{item.k}}" bindtap="onOptionTap">
+      <view class="option-key font-art">{{item.k}}</view>
+      <view class="option-text">{{item.t}}</view>
+      <view class="option-check {{q.isSelected(answers, questions[current].id, item.k) ? 'option-check-on' : ''}}"></view>
+    </view>
+  </view>
+
+  <!-- 答题卡 -->
+  <view class="card sheet">
+    <view class="sheet-title font-art">答题卡</view>
+    <view class="sheet-grid">
+      <view class="sheet-cell {{answers[item.id] ? 'sheet-cell-done' : ''}} {{current === index ? 'sheet-cell-current' : ''}}"
+        wx:for="{{questions}}" wx:key="id"
+        data-i="{{index}}" bindtap="onTapQuestion">{{index + 1}}</view>
+    </view>
+  </view>
+
+  <!-- 操作栏 -->
+  <view class="opbar">
+    <view class="op-btn ghost" bindtap="prev">上一题</view>
+    <view class="op-btn main" bindtap="askSubmit">交卷</view>
+    <view class="op-btn ghost" bindtap="next">下一题</view>
+  </view>
+
+  <!-- 交卷确认 -->
+  <gf-modal visible="{{showSubmit}}" title="确认交卷"
+    content="交卷后立即判分并生成解析，确定交卷？"
+    confirmText="{{submitting ? '交卷中…' : '确认交卷'}}" cancelText="继续答题"
+    bind:confirm="doSubmit" bind:cancel="onCancelSubmit" />
+</view>

@@ -1,0 +1,26 @@
+.seal-tag {
+  display: inline-block;
+  padding: 4rpx 14rpx;
+  font-size: 20rpx;
+  line-height: 1.4;
+  border-radius: 6rpx;
+  border: 1rpx solid;
+  letter-spacing: 1rpx;
+}
+.seal-qualified { color: #C82423; border-color: #C82423; background: rgba(200,36,35,0.06); }
+.seal-probation { color: #B7791F; border-color: #B7791F; background: rgba(183,121,31,0.08); }
+.seal-invalid { color: #888888; border-color: #888888; background: rgba(136,136,136,0.06); }
+.seal-frozen { color: #4A6374; border-color: #4A6374; background: rgba(74,99,116,0.08); }
+.seal-void { color: #333333; border-color: #333333; background: rgba(26,26,26,0.05); }
+.seal-pending { color: #B7791F; border-color: #B7791F; background: rgba(183,121,31,0.08); }
+.seal-approved { color: #2E7D5B; border-color: #2E7D5B; background: rgba(46,125,91,0.07); }
+.seal-rejected { color: #C82423; border-color: #C82423; background: rgba(200,36,35,0.06); }
+.seal-refunded { color: #888888; border-color: #888888; background: rgba(136,136,136,0.06); }
+.seal-opening { color: #C82423; border-color: #C82423; background: rgba(200,36,35,0.06); }
+.seal-active { color: #C82423; border-color: #C82423; background: rgba(200,36,35,0.06); }
+.seal-success { color: #2E7D5B; border-color: #2E7D5B; background: rgba(46,125,91,0.07); }
+.seal-expired { color: #888888; border-color: #888888; background: rgba(136,136,136,0.06); }
+.seal-basic { color: #C82423; border-color: #C82423; background: rgba(200,36,35,0.06); }
+.seal-advance { color: #4A6374; border-color: #4A6374; background: rgba(74,99,116,0.08); }
+.seal-lifetime { color: #B7791F; border-color: #B7791F; background: rgba(183,121,31,0.08); }
+.seal-default { color: #4A6374; border-color: #4A6374; background: rgba(74,99,116,0.08); }

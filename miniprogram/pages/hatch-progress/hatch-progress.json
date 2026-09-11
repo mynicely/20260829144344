@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "孵化任务进度",
+  "usingComponents": {
+    "seal-tag": "/components/seal-tag/seal-tag",
+    "empty-state": "/components/empty-state/empty-state"
+  }
+}

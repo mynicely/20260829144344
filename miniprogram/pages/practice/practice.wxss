@@ -1,0 +1,35 @@
+.hero {
+  margin: 20rpx 24rpx;
+  padding: 40rpx 32rpx;
+  border-radius: 16rpx;
+  background: linear-gradient(150deg, #4A6374 0%, #6B8798 100%);
+  color: #F8F5F0;
+}
+.hero-title { font-size: 44rpx; letter-spacing: 6rpx; }
+.hero-sub { font-size: 24rpx; opacity: 0.85; margin: 10rpx 0 24rpx; }
+.hero-btn { width: 220rpx; display: inline-block; background: #FFD54F; color: #4A3B12; font-weight: 600; }
+
+.section-inline { display: flex; align-items: center; margin: 30rpx 28rpx 4rpx; }
+.section-title { font-size: 34rpx; font-weight: 600; letter-spacing: 4rpx; }
+.section-seal { width: 36rpx; height: 8rpx; margin-left: 14rpx; background: var(--color-cinnabar); border-radius: 4rpx; opacity: 0.8; }
+
+.course-row { margin-top: 20rpx; }
+.course-icon {
+  width: 68rpx; height: 68rpx; line-height: 68rpx;
+  text-align: center; font-size: 30rpx;
+  border-radius: 12rpx;
+  background: rgba(200, 36, 35, 0.08); color: var(--color-cinnabar);
+  border: 1rpx solid rgba(200, 36, 35, 0.25);
+  margin-right: 18rpx;
+}
+.course-name { font-size: 28rpx; font-weight: 600; }
+.go-icon { color: var(--color-gray-tip); font-size: 34rpx; }
+
+.history-row { margin-top: 20rpx; }
+.history-title { font-size: 28rpx; font-weight: 500; }
+.score { font-size: 34rpx; font-weight: 700; }
+.score-pass { color: #2E7D5B; }
+.score-fail { color: var(--color-cinnabar); }
+
+.wrong-entry { margin-top: 20rpx; }
+.page-paper { padding-bottom: 40rpx; }

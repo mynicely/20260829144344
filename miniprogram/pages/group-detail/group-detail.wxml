@@ -1,0 +1,86 @@
+<view class="page-paper" wx:if="{{group}}">
+  <!-- 拼团主卡 -->
+  <view class="hero">
+    <view class="hero-course">{{group.course_title}}</view>
+    <view class="hero-price-row row">
+      <view class="hero-price">¥{{group.tier_price || group.price}}</view>
+      <view class="hero-origin price-through">原价 ¥{{group.price}}</view>
+    </view>
+    <view class="progress-bar">
+      <view class="progress-fill" style="width: {{group.pctValue}}%"></view>
+    </view>
+    <view class="hero-meta row-between">
+      <text>已{{group.member_count}}/{{group.min_count}}人成团</text>
+      <text class="hero-countdown" wx:if="{{group.status === 'opening'}}">剩 {{group.remainText}}</text>
+      <seal-tag status="{{group.status}}" wx:else />
+    </view>
+  </view>
+
+  <!-- 团员头像列表 -->
+  <view class="card">
+    <view class="section-inline">
+      <view class="section-title font-art">团员列表</view>
+      <view class="section-seal"></view>
+    </view>
+    <view class="member-list">
+      <view class="member" wx:for="{{members}}" wx:key="user_id">
+        <view class="member-avatar font-art {{index === 0 ? 'member-avatar-leader' : ''}}">{{item.avatarChar}}</view>
+        <view class="member-name">{{item.nickname || '好友'}}</view>
+        <view class="member-tag" wx:if="{{index === 0}}">团长</view>
+      </view>
+      <view class="member member-empty" wx:for="{{group.min_count - members.length}}" wx:key="*this">
+        <view class="member-avatar member-avatar-empty">?</view>
+        <view class="member-name">待加入</view>
+      </view>
+    </view>
+    <view class="tip" style="text-align:center;margin-top:16rpx;" wx:if="{{group.status === 'opening'}}">
+      还差 {{group.min_count - group.member_count > 0 ? group.min_count - group.member_count : 0}} 人成团，邀请好友一起来吧
+    </view>
+  </view>
+
+  <!-- 档位权益（若有） -->
+  <view class="card" wx:if="{{group.tierSnapshot && (group.tierSnapshot.services || group.tierSnapshot.gift)}}">
+    <view class="section-inline">
+      <view class="section-title font-art">档位权益</view>
+      <view class="section-seal"></view>
+    </view>
+    <view class="tip" wx:if="{{group.tierSnapshot.services}}">服务：{{group.tierSnapshot.services}}</view>
+    <view class="tip" wx:if="{{group.tierSnapshot.gift}}">礼包：{{group.tierSnapshot.gift}}</view>
+  </view>
+
+  <!-- 操作区 -->
+  <view class="card action-card">
+    <gf-button wx:if="{{group.status === 'opening' && !isMine}}" type="primary"
+      text="{{joining ? '加入中…' : '立即参团'}}"
+      disabled="{{joining}}" loading="{{joining}}"
+      bind:tap="onJoinTap" />
+    <gf-button wx:if="{{group.status === 'opening' && isMine}}" type="primary"
+      text="邀请好友参团" bind:tap="onShare" />
+    <gf-button wx:if="{{isMine && (group.status === 'opening' || group.status === 'pending')}}" type="ghost"
+      text="取消拼团" bind:tap="onCancelTap" />
+    <view class="tip" style="text-align:center;margin-top:20rpx;" wx:if="{{isMine && group.status === 'opening'}}">
+      把拼团分享给好友，成团后团长按团购价自动开通课程
+    </view>
+    <view class="tip" style="text-align:center;margin-top:20rpx;" wx:if="{{group.status === 'success'}}">
+      已成功成团！团长已按团购价开通课程
+    </view>
+    <view class="tip" style="text-align:center;margin-top:20rpx;" wx:if="{{group.status === 'failed'}}">
+      该拼团未成团已结束，预付款已原路退回
+    </view>
+  </view>
+
+  <view class="compliance">拼团属于优惠活动，该订单不计分享奖励</view>
+  <view class="safe-bottom"></view>
+
+  <!-- promoter 确认弹窗 -->
+  <gf-modal visible="{{promoterModal}}" title="确认参与拼团"
+    content="您当前是分享推广身份，参与拼团优惠，本订单将放弃全部分享奖励，不会产生推广收益，也不会更新您的分享推广身份，确认继续下单？"
+    confirmText="确认参团" cancelText="取消" danger
+    bind:confirm="onPromoterConfirm" bind:cancel="onPromoterCancel" />
+
+  <!-- 参团确认 -->
+  <gf-modal visible="{{confirmJoinModal}}" title="确认参团"
+    content="确认加入该拼团？成团后可享拼团优惠价购课。"
+    confirmText="确认参团" cancelText="再想想"
+    bind:confirm="doJoin" bind:cancel="onConfirmJoinCancel" />
+</view>

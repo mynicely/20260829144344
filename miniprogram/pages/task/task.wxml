@@ -1,0 +1,106 @@
+<view class="page-paper">
+  <!-- 打卡概览 -->
+  <view class="hero">
+    <view class="hero-stats">
+      <view class="stat">
+        <view class="stat-num">{{streak}}</view>
+        <view class="stat-label">连续打卡(天)</view>
+      </view>
+      <view class="stat">
+        <view class="stat-num">{{monthCount}}</view>
+        <view class="stat-label">本月打卡</view>
+      </view>
+      <view class="stat">
+        <view class="stat-num">¥{{todayDoneCount * 2}}</view>
+        <view class="stat-label">今日可得抵用金</view>
+      </view>
+    </view>
+    <view class="hero-tip">每次打卡可得抵用金，连续打卡奖励更高</view>
+  </view>
+
+  <!-- 今日任务 -->
+  <view class="section-inline">
+    <view class="section-title font-art">今日任务</view>
+    <view class="section-seal"></view>
+  </view>
+  <view class="card task-card" wx:for="{{taskDefs}}" wx:key="key">
+    <view class="row" style="flex:1;">
+      <view class="task-icon font-art">{{item.icon}}</view>
+      <view class="flex-1">
+        <view class="task-name">{{item.label}}</view>
+        <view class="tip" wx:if="{{item.key === 'calligraphy'}}">上传练字作业图片即可完成</view>
+        <view class="tip" wx:if="{{item.key === 'class'}}">进入课堂学习签到即可完成</view>
+        <view class="tip" wx:if="{{item.key === 'review'}}">写下今日学习心得即可完成</view>
+      </view>
+    </view>
+    <view class="task-btn {{done[item.key] ? 'task-btn-done' : ''}}" data-key="{{item.key}}" bindtap="onTaskTap">
+      {{done[item.key] ? '已完成' : '去打卡'}}
+    </view>
+  </view>
+
+  <!-- 阶梯奖励 -->
+  <view class="section-inline">
+    <view class="section-title font-art">阶梯奖励</view>
+    <view class="section-seal"></view>
+  </view>
+  <view class="card bonus-list">
+    <view class="bonus-row row-between" wx:for="{{bonus}}" wx:key="days">
+      <text>连续 {{item.days}} 天</text>
+      <text class="price">+¥{{item.amount}}</text>
+    </view>
+  </view>
+
+  <!-- 打卡日历（最近35天） -->
+  <view class="section-inline">
+    <view class="section-title font-art">打卡日历</view>
+    <view class="section-seal"></view>
+    <view class="section-link" bindtap="goCheckins">查看记录 ›</view>
+  </view>
+  <view class="card calendar">
+    <view class="calendar-week">
+      <text wx:for="{{['一','二','三','四','五','六','日']}}" wx:key="*this" class="calendar-weekday">{{item}}</text>
+    </view>
+    <view class="calendar-grid">
+      <view class="cal-cell {{item.done ? 'cal-cell-done' : ''}} {{item.isToday ? 'cal-cell-today' : ''}}"
+        wx:for="{{calendar}}" wx:key="key">
+        {{item.day}}
+      </view>
+    </view>
+  </view>
+
+  <!-- 我的作业入口 -->
+  <view class="card homework-entry" bindtap="goHomework">
+    <view class="row">
+      <view class="task-icon font-art">作</view>
+      <view class="flex-1">
+        <view class="task-name">我的作业</view>
+        <view class="tip">查看已提交的练字作业与学习心得</view>
+      </view>
+      <text class="expand-arrow">›</text>
+    </view>
+  </view>
+
+  <view class="compliance">{{compliance}}</view>
+  <view class="safe-bottom"></view>
+
+  <!-- 提交作业弹窗 -->
+  <gf-modal visible="{{showSubmit}}" title="{{activeTask === 'calligraphy' ? '练字打卡' : '学情复盘'}}"
+    confirmText="{{submitting ? '提交中…' : '提交'}}" showCancel="{{true}}"
+    bind:confirm="onSubmit" bind:cancel="onCloseSubmit">
+    <view class="submit-box">
+      <block wx:if="{{activeTask === 'calligraphy'}}">
+        <view class="upload-box" bindtap="onChooseImage">
+          <image wx:if="{{image}}" class="upload-img" src="{{image}}" mode="aspectFill" />
+          <view wx:else class="upload-empty">
+            <view class="upload-plus">+</view>
+            <view class="tip">上传练字作业图片（必填）</view>
+          </view>
+        </view>
+      </block>
+      <block wx:if="{{activeTask === 'review'}}">
+        <textarea class="submit-textarea" placeholder="写下今日学习心得体会（必填）" value="{{content}}" bindinput="onContentInput" maxlength="500" />
+        <view class="tip" style="text-align:right;">{{content.length}}/500</view>
+      </block>
+    </view>
+  </gf-modal>
+</view>

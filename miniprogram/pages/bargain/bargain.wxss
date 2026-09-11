@@ -1,0 +1,20 @@
+.section-inline { display: flex; align-items: center; margin: 30rpx 28rpx 4rpx; }
+.section-title { font-size: 34rpx; font-weight: 600; letter-spacing: 4rpx; }
+.section-seal { width: 36rpx; height: 8rpx; margin-left: 14rpx; background: var(--color-cinnabar); border-radius: 4rpx; opacity: 0.8; }
+.bargain-rule { margin: 12rpx 0 20rpx; }
+.picker-row {
+  display: flex; align-items: center; justify-content: space-between;
+  border: 1rpx solid #E0D6C6; border-radius: 10rpx;
+  padding: 20rpx 24rpx; margin-bottom: 20rpx;
+  background: #fff; font-size: 28rpx;
+}
+.picker-placeholder { color: var(--color-gray-tip); }
+.picker-arrow { color: var(--color-gray-tip); }
+
+.bargain-card { margin-top: 20rpx; }
+.bargain-title { font-size: 30rpx; font-weight: 600; flex: 1; margin-right: 12rpx; }
+.bargain-price-row { align-items: baseline; gap: 20rpx; margin: 14rpx 0 8rpx; }
+.bargain-price { font-size: 26rpx; color: var(--color-stone); }
+.bargain-floor { font-size: 24rpx; color: var(--color-gray-tip); }
+.countdown { color: var(--color-cinnabar); font-size: 24rpx; }
+.page-paper { padding-bottom: 40rpx; }
