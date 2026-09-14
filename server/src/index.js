@@ -1382,9 +1382,19 @@ app.post('/api/join/apply', auth.authUser, (req, res) => {
     coop_mode, remark, img_list
   } = req.body;
   const userId = req.user.id;
+  // 重复提交拦截：同一用户仅允许存在1条待审核(status=0)的加盟申请
+  const dup = db.prepare(`SELECT id FROM join_apply WHERE user_id=? AND status=0 LIMIT 1`).get(userId);
+  if (dup) return res.status(400).json({ok:false,msg:'您已有待审核申请，请勿重复提交'});
   if(!real_name || !phone || !province || !city || !district || !coop_mode){
     return res.status(400).json({ok:false,msg:'必填项不能为空'});
   }
+  if(!/^1[3-9]\d{9}$/.test(String(phone).trim())){
+    return res.status(400).json({ok:false,msg:'手机号格式不正确'});
+  }
+  // img_list 边界加固：仅接受图片数组（字符串则尝试解析），统一 JSON.stringify 入库
+  let imgs = img_list;
+  if (typeof imgs === 'string') { try { imgs = JSON.parse(imgs); } catch (e) { imgs = []; } }
+  if (!Array.isArray(imgs)) imgs = [];
   const stmt = db.prepare(`
     INSERT INTO join_apply
     (user_id,real_name,phone,province,city,district,has_site,site_area,site_capacity,teach_bg,coop_mode,remark,img_list)
@@ -1393,7 +1403,7 @@ app.post('/api/join/apply', auth.authUser, (req, res) => {
   const r = stmt.run(
     userId,real_name,phone,province,city,district,
     has_site??0,site_area||'',site_capacity||'',
-    teach_bg||'',coop_mode,remark||'',JSON.stringify(img_list||[])
+    teach_bg||'',coop_mode,remark||'',JSON.stringify(imgs)
   );
   return res.json({ok:true,msg:'提交成功，请等待工作人员审核',data:{applyId:r.lastInsertRowid}});
 });
