@@ -1,19 +1,15 @@
 // 数据库初始化与连接
-// 使用 Node 内置 node:sqlite (DatabaseSync)，无需任何原生编译依赖
-// 兼容 better-sqlite3 的同步 API：prepare().run/get/all/exec + lastInsertRowid
+// 使用 better-sqlite3 替代 node:sqlite，兼容 Node.js v20
 const path = require('path');
 const fs = require('fs');
-const { DatabaseSync } = require('node:sqlite');
-
+const Database = require('better-sqlite3');
 const DB_DIR = path.join(__dirname, '..', 'data');
 // 支持 HANMO_DB 环境变量覆盖数据库路径（测试/多实例用），默认生产库 hanmo.db
 const DB_PATH = process.env.HANMO_DB || path.join(DB_DIR, 'hanmo.db');
-
 if (!fs.existsSync(DB_DIR)) {
   fs.mkdirSync(DB_DIR, { recursive: true });
 }
-
-const db = new DatabaseSync(DB_PATH);
+const db = new Database(DB_PATH);
 // 并发安全四件套：
 // WAL 预写日志：读写并发不阻塞；busy_timeout：锁冲突等待最多 5 秒而不是立刻抛错；
 // synchronous=NORMAL：WAL 模式下平衡性能与持久性；foreign_keys：开启外键约束防脏数据。
@@ -22,30 +18,6 @@ db.exec('PRAGMA journal_mode = WAL');
 db.exec('PRAGMA busy_timeout = 5000');
 db.exec('PRAGMA synchronous = NORMAL');
 db.exec('PRAGMA foreign_keys = ON');
-
-// 包装 prepare，确保 lastInsertRowid / changes 为 number（node:sqlite 可能返回 bigint）
-const _origPrepare = db.prepare.bind(db);
-db.prepare = function (sql) {
-  const stmt = _origPrepare(sql);
-  const origRun = stmt.run.bind(stmt);
-  const origGet = stmt.get.bind(stmt);
-  const origAll = stmt.all.bind(stmt);
-  stmt.run = function (...args) {
-    const r = origRun(...args);
-    return {
-      changes: Number(r.changes),
-      lastInsertRowid: Number(r.lastInsertRowid),
-    };
-  };
-  stmt.get = function (...args) {
-    return origGet(...args);
-  };
-  stmt.all = function (...args) {
-    return origAll(...args);
-  };
-  return stmt;
-};
-
 // ---------- 建表 ----------
 db.exec(`
 -- 用户基础表（所有用户通用）
@@ -71,7 +43,6 @@ CREATE TABLE IF NOT EXISTS users (
   created_at TEXT DEFAULT (datetime('now','localtime')),
   updated_at TEXT DEFAULT (datetime('now','localtime'))
 );
-
 -- 管培生专属表（考核/清退/补位/待遇核心）
 CREATE TABLE IF NOT EXISTS trainees (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -90,7 +61,6 @@ CREATE TABLE IF NOT EXISTS trainees (
   exit_at TEXT,
   in_pool INTEGER DEFAULT 1             -- 是否在人才库
 );
-
 -- 订单表
 CREATE TABLE IF NOT EXISTS orders (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -109,7 +79,6 @@ CREATE TABLE IF NOT EXISTS orders (
   closed_at TEXT,                       -- 关闭时间
   created_at TEXT DEFAULT (datetime('now','localtime'))
 );
-
 -- 介绍奖励流水
 CREATE TABLE IF NOT EXISTS direct_commissions (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -121,7 +90,6 @@ CREATE TABLE IF NOT EXISTS direct_commissions (
   status TEXT DEFAULT 'pending',        -- pending待审核/paid已到账
   created_at TEXT DEFAULT (datetime('now','localtime'))
 );
-
 -- 培育奖记录
 CREATE TABLE IF NOT EXISTS help_rewards (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -134,7 +102,6 @@ CREATE TABLE IF NOT EXISTS help_rewards (
   paid_at TEXT,
   created_at TEXT DEFAULT (datetime('now','localtime'))
 );
-
 -- 主理人10%待遇流水
 CREATE TABLE IF NOT EXISTS leader_allowances (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -146,7 +113,6 @@ CREATE TABLE IF NOT EXISTS leader_allowances (
   status TEXT DEFAULT 'pending',        -- pending/frozen/void/paid
   created_at TEXT DEFAULT (datetime('now','localtime'))
 );
-
 -- 主理人培育奖：名下管培生每介绍1名付费分享学员，主理人得200
 CREATE TABLE IF NOT EXISTS help_bonuses (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -157,7 +123,6 @@ CREATE TABLE IF NOT EXISTS help_bonuses (
   status TEXT DEFAULT 'paid',           -- paid已发放/refunded已退款冲回
   created_at TEXT DEFAULT (datetime('now','localtime'))
 );
-
 -- 抵用券/现金券账户
 CREATE TABLE IF NOT EXISTS coupons (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -167,7 +132,6 @@ CREATE TABLE IF NOT EXISTS coupons (
   total_earned INTEGER DEFAULT 0,
   updated_at TEXT DEFAULT (datetime('now','localtime'))
 );
-
 -- 抵用券明细流水
 CREATE TABLE IF NOT EXISTS coupon_flows (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -178,7 +142,6 @@ CREATE TABLE IF NOT EXISTS coupon_flows (
   remark TEXT,
   created_at TEXT DEFAULT (datetime('now','localtime'))
 );
-
 -- 打卡任务记录
 CREATE TABLE IF NOT EXISTS checkins (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -188,7 +151,6 @@ CREATE TABLE IF NOT EXISTS checkins (
   reward INTEGER DEFAULT 0,
   created_at TEXT DEFAULT (datetime('now','localtime'))
 );
-
 -- 学习任务记录
 CREATE TABLE IF NOT EXISTS learning_tasks (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -203,7 +165,6 @@ CREATE TABLE IF NOT EXISTS learning_tasks (
   teacher_comment TEXT,                 -- 老师点评
   created_at TEXT DEFAULT (datetime('now','localtime'))
 );
-
 -- 商品/课程类目表
 CREATE TABLE IF NOT EXISTS categories (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -213,7 +174,6 @@ CREATE TABLE IF NOT EXISTS categories (
   status TEXT DEFAULT 'on',
   created_at TEXT DEFAULT (datetime('now','localtime'))
 );
-
 -- 课程/商品表（统一电商商品，type区分课程/实物/活动）
 CREATE TABLE IF NOT EXISTS courses (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -239,7 +199,6 @@ CREATE TABLE IF NOT EXISTS courses (
   status TEXT DEFAULT 'on',
   created_at TEXT DEFAULT (datetime('now','localtime'))
 );
-
 -- 课程评价
 CREATE TABLE IF NOT EXISTS reviews (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -252,7 +211,6 @@ CREATE TABLE IF NOT EXISTS reviews (
   created_at TEXT DEFAULT (datetime('now','localtime')),
   UNIQUE(course_id, user_id)
 );
-
 -- 拼团活动
 CREATE TABLE IF NOT EXISTS group_orders (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -267,7 +225,6 @@ CREATE TABLE IF NOT EXISTS group_orders (
   expire_at TEXT,                       -- 拼团截止时间（创建时根据 group_hours 计算）
   created_at TEXT DEFAULT (datetime('now','localtime'))
 );
-
 -- 拼团成员
 CREATE TABLE IF NOT EXISTS group_members (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -275,7 +232,6 @@ CREATE TABLE IF NOT EXISTS group_members (
   user_id INTEGER NOT NULL,
   joined_at TEXT DEFAULT (datetime('now','localtime'))
 );
-
 -- 砍价活动
 CREATE TABLE IF NOT EXISTS bargains (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -291,7 +247,6 @@ CREATE TABLE IF NOT EXISTS bargains (
   created_at TEXT DEFAULT (datetime('now','localtime')),
   expire_at TEXT
 );
-
 -- 帮砍记录
 CREATE TABLE IF NOT EXISTS bargain_helps (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -300,7 +255,6 @@ CREATE TABLE IF NOT EXISTS bargain_helps (
   cut_amount INTEGER NOT NULL,          -- 砍掉金额
   created_at TEXT DEFAULT (datetime('now','localtime'))
 );
-
 -- 免费体验课预约
 CREATE TABLE IF NOT EXISTS trial_lessons (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -318,7 +272,6 @@ CREATE TABLE IF NOT EXISTS trial_lessons (
   contacted_at TEXT,
   created_at TEXT DEFAULT (datetime('now','localtime'))
 );
-
 -- 主理人补位/预警通知（未达标实时预警 + 自动补充）
 CREATE TABLE IF NOT EXISTS notices (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -328,7 +281,6 @@ CREATE TABLE IF NOT EXISTS notices (
   is_read INTEGER DEFAULT 0,
   created_at TEXT DEFAULT (datetime('now','localtime'))
 );
-
 -- 推荐关系绑定变更记录（手动解绑/转绑日志，含操作人身份与备注）
 CREATE TABLE IF NOT EXISTS rebind_logs (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -344,7 +296,6 @@ CREATE TABLE IF NOT EXISTS rebind_logs (
   note TEXT,                            -- 备注
   created_at TEXT DEFAULT (datetime('now','localtime'))
 );
-
 -- 提现申请表（奖励收益提现，管理员审核打款；抵用券余额禁止提现）
 CREATE TABLE IF NOT EXISTS withdrawals (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -358,7 +309,6 @@ CREATE TABLE IF NOT EXISTS withdrawals (
   created_at TEXT DEFAULT (datetime('now','localtime')),
   processed_at TEXT                      -- 处理时间
 );
-
 -- 支付日志（下单/回调/结算全链路留痕，便于排查对账）
 CREATE TABLE IF NOT EXISTS pay_logs (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -367,7 +317,6 @@ CREATE TABLE IF NOT EXISTS pay_logs (
   payload TEXT,                         -- 原始JSON（回调原文/请求报文等）
   created_at TEXT DEFAULT (datetime('now','localtime'))
 );
-
 -- 系统配置(可动态修改)
 CREATE TABLE IF NOT EXISTS settings (
   key TEXT PRIMARY KEY,
@@ -375,7 +324,6 @@ CREATE TABLE IF NOT EXISTS settings (
   remark TEXT,
   updated_at TEXT DEFAULT (datetime('now','localtime'))
 );
-
 -- 规则公示内容
 CREATE TABLE IF NOT EXISTS rule_pages (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -383,7 +331,6 @@ CREATE TABLE IF NOT EXISTS rule_pages (
   content TEXT,
   created_at TEXT DEFAULT (datetime('now','localtime'))
 );
-
 -- 公司介绍（为什么选择我们独白页）
 CREATE TABLE IF NOT EXISTS company_intro (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -391,7 +338,6 @@ CREATE TABLE IF NOT EXISTS company_intro (
   content TEXT,
   updated_at TEXT DEFAULT (datetime('now','localtime'))
 );
-
 -- 首页广告/活动
 CREATE TABLE IF NOT EXISTS ads (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -403,7 +349,6 @@ CREATE TABLE IF NOT EXISTS ads (
   status TEXT DEFAULT 'on',
   created_at TEXT DEFAULT (datetime('now','localtime'))
 );
-
 -- 帖子栏目分类（动态增删改，后台管理；发帖 category 存 value）
 CREATE TABLE IF NOT EXISTS post_categories (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -413,7 +358,6 @@ CREATE TABLE IF NOT EXISTS post_categories (
   status TEXT DEFAULT 'on',    -- on启用/off停用（删除=停用，不影响历史帖子）
   created_at TEXT DEFAULT (datetime('now','localtime'))
 );
-
 -- 交流社区帖子（博客/论坛/图文分享）
 CREATE TABLE IF NOT EXISTS posts (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -427,7 +371,6 @@ CREATE TABLE IF NOT EXISTS posts (
   comment_count INTEGER DEFAULT 0,
   created_at TEXT DEFAULT (datetime('now','localtime'))
 );
-
 -- 帖子评论
 CREATE TABLE IF NOT EXISTS post_comments (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -435,318 +378,15 @@ CREATE TABLE IF NOT EXISTS post_comments (
   user_id INTEGER NOT NULL,
   content TEXT,
   status TEXT DEFAULT 'approved',       -- approved/审核
-  created_at TEXT DEFAULT (datetime('now','localtime'))
-);
-
--- 课程章节（章节式学习：大纲/学习进度共用数据源）
-CREATE TABLE IF NOT EXISTS course_chapters (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  course_id INTEGER NOT NULL,
-  title TEXT NOT NULL,                  -- 章节标题
-  duration TEXT,                        -- 时长(如"15分钟"或"约1小时")
-  content TEXT,                         -- 章节学习内容(富文本,可空则展开课程总详情)
-  sort INTEGER DEFAULT 0,
-  status TEXT DEFAULT 'on',
-  created_at TEXT DEFAULT (datetime('now','localtime'))
-);
-
--- 章节学习进度（学员标记完成）
-CREATE TABLE IF NOT EXISTS chapter_progress (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  user_id INTEGER NOT NULL,
-  course_id INTEGER NOT NULL,
-  chapter_id INTEGER NOT NULL,
-  completed INTEGER DEFAULT 1,
-  updated_at TEXT DEFAULT (datetime('now','localtime')),
-  UNIQUE(user_id, chapter_id)
-);
-`);
-
-// ---------- 迁移：为已存在的表补充新增字段 ----------
-function ensureColumn(table, col, ddl) {
-  try {
-    db.exec(`ALTER TABLE ${table} ADD COLUMN ${ddl}`);
-  } catch (e) { /* 列已存在则忽略 */ }
-}
-ensureColumn('trial_lessons', 'subject', `subject TEXT`);
-// 用户邀请码（老库迁移补列 + 唯一索引，存量用户由懒生成机制补发）
-ensureColumn('users', 'invite_code', `invite_code TEXT`);
-// 交流帖子附件（老库迁移补列，用于碑帖资料下载）
-ensureColumn('posts', 'attachment', `attachment TEXT`);
-// 帖子个人隐藏（老库迁移补列：1=仅自己可见）
-ensureColumn('posts', 'hidden', `hidden INTEGER DEFAULT 0`);
-try { db.exec(`CREATE UNIQUE INDEX IF NOT EXISTS idx_users_invite_code ON users(invite_code)`); } catch (e) { /* 唯一索引冲突时忽略，由生成逻辑保证唯一 */ }
-ensureColumn('trial_lessons', 'mode', `mode TEXT DEFAULT 'online'`);
-ensureColumn('trial_lessons', 'prefer_time', `prefer_time TEXT`);
-ensureColumn('trial_lessons', 'admin_note', `admin_note TEXT`);
-ensureColumn('trainees', 'slot_type', `slot_type TEXT DEFAULT 'assessment'`);
-ensureColumn('trainees', 'last_zero_month', `last_zero_month TEXT`);
-// 滚动周期考核：已考核完成的周期轮数（防止服务重启/数据回滚后重复计算同一轮考核）
-ensureColumn('trainees', 'finished_cycle', `finished_cycle INTEGER DEFAULT 0`);
-// 存量修复：历史名额 slot_status 为空 → 归为正常在岗
-try { db.exec(`UPDATE trainees SET slot_status='normal' WHERE slot_status IS NULL`); } catch (e) { /* 表不存在则忽略 */ }
-// 帮扶主理人：与 leader_id(推荐人,终身绑定,享10%待遇)分开；培育奖/培育奖归 helper
-ensureColumn('trainees', 'helper_id', `helper_id INTEGER`);
-// 培育奖组键：help_rewards 按 (mentor_id帮扶人, referrer_id推荐人) 分组，每组=某推荐人的前N名名额全部孵化合格
-ensureColumn('help_rewards', 'referrer_id', `referrer_id INTEGER`);
-
-// ---------- 存量数据回填：trainees.helper_id ----------
-// 规则：某推荐人名下前 slot_limit 个名额(含补位)留给介绍人帮扶 → helper=推荐人所在帮扶主理人(推荐人自己作为trainee时的helper_id，无则自己)；
-//       第 slot_limit+1 个起为推荐人自己的学习圈 → helper=推荐人自己
-function backfillHelperIds() {
-  let slotLimit = 2;
-  try {
-    const r = db.prepare(`SELECT value FROM settings WHERE key='slot_limit'`).get();
-    if (r) slotLimit = JSON.parse(r.value).v || 2;
-  } catch (e) { /* 默认2 */ }
-  // 1) 第 slot_limit+1 个起：helper = 推荐人自己
-  db.prepare(`UPDATE trainees SET helper_id=leader_id WHERE helper_id IS NULL AND slot_no>?`).run(slotLimit);
-  // 2) 前 slot_limit 个：helper = 推荐人自己作为trainee时的helper_id（递归逐层稳定）
-  let guard = 0;
-  while (guard++ < 100) {
-    const need = db.prepare(`SELECT t.id, t.leader_id, ld.helper_id AS ld_helper
-      FROM trainees t LEFT JOIN trainees ld ON ld.user_id=t.leader_id AND ld.in_pool=1
-      WHERE t.helper_id IS NULL AND t.slot_no<=?`).all(slotLimit);
-    if (!need.length) break;
-    for (const t of need) {
-      db.prepare(`UPDATE trainees SET helper_id=? WHERE id=?`).run(t.ld_helper || t.leader_id, t.id);
-    }
-  }
-  // 3) 兜底
-  db.prepare(`UPDATE trainees SET helper_id=leader_id WHERE helper_id IS NULL`).run();
-}
-backfillHelperIds();
-
-// ---------- 存量数据迁移：help_rewards 帮扶人改 helper、补组键 ----------
-// 培育奖记录归属帮扶主理人(helper)，组键 referrer_id = 新学员的推荐人(leader_id)
-db.prepare(`UPDATE help_rewards SET
-    mentor_id = COALESCE((SELECT helper_id FROM trainees WHERE user_id = help_rewards.newbie_id), mentor_id),
-    referrer_id = COALESCE((SELECT leader_id FROM trainees WHERE user_id = help_rewards.newbie_id), referrer_id)
-  WHERE EXISTS (SELECT 1 FROM trainees WHERE user_id = help_rewards.newbie_id)`).run();
-ensureColumn('orders', 'group_id', `group_id INTEGER`);
-ensureColumn('orders', 'group_discount', `group_discount INTEGER DEFAULT 0`);
-ensureColumn('orders', 'biz_type', `biz_type TEXT`);
-ensureColumn('orders', 'biz_id', `biz_id INTEGER`);
-ensureColumn('group_orders', 'tier_price', `tier_price INTEGER`);
-ensureColumn('group_orders', 'order_id', `order_id INTEGER`);
-ensureColumn('group_orders', 'expire_at', `expire_at TEXT`);
-ensureColumn('bargains', 'tier_mode', `tier_mode TEXT`);
-ensureColumn('bargains', 'order_id', `order_id INTEGER`);
-ensureColumn('bargains', 'tier_config', `tier_config TEXT`);
-ensureColumn('trial_lessons', 'reply', `reply TEXT`);
-ensureColumn('trial_lessons', 'contacted_at', `contacted_at TEXT`);
-// 课程级营销配置：按课程设置拼团档位（人数/价格/服务/礼包）与砍价规则（档位/每刀减价/底价）
-ensureColumn('courses', 'group_tiers', `group_tiers TEXT`);
-ensureColumn('courses', 'bargain_config', `bargain_config TEXT`);
-// 拼团快照：记录开团时所选档位的服务/礼包，避免后续编辑课程后产生纠纷
-ensureColumn('group_orders', 'tier_snapshot', `tier_snapshot TEXT`);
-// courses 表新增电商字段
-ensureColumn('courses', 'teacher', `teacher TEXT`);
-ensureColumn('courses', 'faq', `faq TEXT`);
-ensureColumn('courses', 'type', `type TEXT DEFAULT 'course'`);
-ensureColumn('courses', 'category_id', `category_id INTEGER`);
-ensureColumn('courses', 'images', `images TEXT`);
-ensureColumn('courses', 'is_bargain', `is_bargain INTEGER DEFAULT 0`);
-ensureColumn('courses', 'stock', `stock INTEGER DEFAULT -1`);
-ensureColumn('courses', 'sales', `sales INTEGER DEFAULT 0`);
-ensureColumn('learning_tasks', 'content', `content TEXT`);
-ensureColumn('learning_tasks', 'image', `image TEXT`);
-ensureColumn('learning_tasks', 'file', `file TEXT`);
-ensureColumn('learning_tasks', 'status', `status TEXT DEFAULT 'submitted'`);
-ensureColumn('learning_tasks', 'teacher_comment', `teacher_comment TEXT`);
-// orders 表新增支付网关字段（老库迁移）
-// 下单记录课程ID：修复"我的课程"按价格档位分组导致同价位课程合并显示的问题
-ensureColumn('orders', 'course_id', `course_id INTEGER`);
-ensureColumn('orders', 'join_fission', `join_fission INTEGER DEFAULT 0`);
-// 财务风控：1=放弃本单全部分享推广奖励（拼团/砍价下单后端强制=1，正价单前端二选一传入）
-ensureColumn('orders', 'forgo_share_reward', `forgo_share_reward INTEGER DEFAULT 0`);
-ensureColumn('orders', 'new_referrer_id', `new_referrer_id INTEGER`);
-ensureColumn('orders', 'wx_transaction_id', `wx_transaction_id TEXT`);
-ensureColumn('orders', 'paid_at', `paid_at TEXT`);
-ensureColumn('orders', 'closed_at', `closed_at TEXT`);
-// 安全加固：用户密码哈希（注册必设密码、登录必校验）
-ensureColumn('users', 'password_hash', `password_hash TEXT`);
-
-// ---------- 默认配置参数 ----------
-function defaultSettings() {
-  const s = {
-    // 产品价格
-    'price_499': { v: 499, remark: '基础班价格' },
-    'price_1299': { v: 1299, remark: '进阶班价格' },
-    'price_2999': { v: 2999, remark: '终身班价格' },
-    // 奖励参数
-    'direct_499': { v: 100, remark: '499介绍奖' },
-    'direct_1299': { v: 300, remark: '1299介绍奖' },
-    'direct_2999': { v: 800, remark: '2999介绍奖' },
-    'help_reward': { v: 200, remark: '培育奖全额' },
-    'help_reward_half': { v: 100, remark: '培育奖半额' },
-    'leader_rate': { v: 0.1, remark: '主理人待遇比例10%（按管培生当月收入）' },
-    // 考核规则
-    'qualify_perf': { v: 1000, remark: '合格管培生考核业绩门槛(元)' },
-    'qualify_orders': { v: 2, remark: '合格管培生考核单数门槛' },
-    'clear_months': { v: 2, remark: '连续零业绩清退周期数(完整考核周期)' },
-    'trainee_cycle_days': { v: 30, remark: '管培生滚动考核周期(天)，从成为管培生(join_at)起算，每个管培生独立滚动，不满一个完整周期不考核' },
-    'leader_rate_base': { v: 'commission', remark: '主理人待遇基数：commission=管培生当月实得奖励收入/sales=管培生当月销售额' },
-    'help_bonus_per_order': { v: 200, remark: '主理人培育奖：名下管培生每介绍1名付费分享学员，主理人得200' },
-    'commission_freeze_days': { v: 0, remark: '介绍奖励冻结期(天,0=即时到账可提现，上线建议7~15)' },
-    'reserve_days': { v: 30, remark: '补位时效(天)' },
-    'reserve_max': { v: 2, remark: '单名额最大补位次数' },
-    'leader_pause_months': { v: 3, remark: '主理人停待遇无业绩月份' },
-    'slot_limit': { v: 2, remark: '主理人孵化考核名额数(前N名参与补位/帮扶，其后终身绑定)' },
-    // 营销工具
-    'checkin_reward': { v: 2, remark: '单次打卡抵现金额' },
-    'checkin_daily_limit': { v: 2, remark: '每日打卡上限' },
-    'task_reward': { v: 1, remark: '单次学习任务奖励' },
-    'coupon_expire_days': { v: 0, remark: '抵现金过期周期(天,0=不过期)' },
-    'withdraw_min': { v: 100, remark: '单笔提现最低金额(元)' },
-    // 状态开关(1开/0关)
-    'help_advance': { v: 0, remark: '培育奖预发机制开关' },
-    'probation_half': { v: 1, remark: '见习管培生收益减半开关' },
-    'allowance_freeze': { v: 1, remark: '待遇冻结/恢复机制开关' },
-    'require_paid_referrer': { v: 1, remark: '奖励资格：推荐人须已付费升级(499等)才获得奖励(1开/0关)' },
-    // 拼团参数
-    'group_min': { v: 2, remark: '默认拼团人数' },
-    'group_hours': { v: 48, remark: '拼团时长(小时)' },
-    // 体验课配置（科目/时段，存字符串数组JSON）
-    'trial_subjects': { v: ['毛笔楷书', '毛笔行书', '硬笔书法', '少儿国画', '成人绘画'], remark: '体验课可选科目' },
-    'trial_slots': { v: ['工作日白天', '工作日晚上', '周末上午', '周末下午'], remark: '体验课可选时段' },
-    // 砍价参数
-    'bargain_max_helps': { v: 5, remark: '砍价最大帮砍人数' },
-    'bargain_floor_rate': { v: 0.5, remark: '砍价底价比例(原价的50%)' },
-    'bargain_hours': { v: 48, remark: '砍价有效期(小时)' },
-    'bargain_price_tiers': { v: [], remark: '砍价档位价(格式:帮砍人数:价格,逗号分隔,如2:599,5:549,10:499,15:449,20:399)' },
-    'bargain_step_reduce': { v: 0, remark: '砍价每增加1人帮砍减价(元),0=不使用' },
-    // 管理后台路径前缀（防破解，修改后需用新地址访问后台）
-    'admin_prefix': { v: 'admin', remark: '管理后台路径前缀' },
-    // 登录兜底：管理员联系方式 + 短信验证码登录
-    'admin_contact': { v: '', remark: '管理员联系方式(微信号/手机号等，注册/登录页"联系管理员"弹窗展示，邀请码无效时提示使用)' },
-    'invite_code_required': { v: 1, remark: '邀请码必填开关(1=注册/预约必须填写有效邀请码,0=可无邀请码注册，邀请关系靠分享链接自动绑定)' },
-    'sms_login_enabled': { v: 1, remark: '短信验证码登录开关(1开/0关)，未设置密码的老账号可用此登录' },
-    'sms_mock_mode': { v: 1, remark: '短信模拟模式(1=验证码打印到服务端日志并随接口返回，仅测试环境；0=接真实短信服务商)' },
-    // 微信登录（公众号网页授权，登录页"微信登录"入口；配好 appid/secret 后自动开启）
-    'wx_oauth_appid': { v: '', remark: '微信公众号AppID(登录页"微信登录"网页授权)' },
-    'wx_oauth_secret': { v: '', remark: '微信公众号AppSecret(网页授权换openid)' },
-    'wx_oauth_redirect': { v: '', remark: '微信授权后回跳的前端登录页地址(如https://域名/login；留空默认回跳当前域名/login，前后端不同域时必须配置)' },
-    // 支付网关配置（pay_mode: manual线下确认收款 / mock模拟支付 / wxpay微信支付）
-    // manual：未开通微信商户收款前，客户下单后展示管理员配置的收款码，线下转账由后台确认已收款后才执行业务
-    'pay_mode': { v: 'manual', remark: '支付模式(manual线下确认/mock模拟/wxpay微信支付)' },
-    // 线下收款信息（manual 模式下展示给客户的收款方式）
-    'pay_receive_wechat_qr': { v: '', remark: '微信收款码图片(URL或base64)' },
-    'pay_receive_wechat_account': { v: '', remark: '微信收款账号/微信号' },
-    'pay_receive_alipay_qr': { v: '', remark: '支付宝收款码图片(URL或base64)' },
-    'pay_receive_alipay_account': { v: '', remark: '支付宝收款账号' },
-    'pay_receive_bank_name': { v: '', remark: '银行名称' },
-    'pay_receive_bank_account': { v: '', remark: '银行账号' },
-    'pay_receive_bank_holder': { v: '', remark: '银行户名' },
-    'pay_receive_notice': { v: '', remark: '线下付款提示文案' },
-    'wxpay_appid': { v: '', remark: '微信小程序AppID' },
-    'wxpay_appsecret': { v: '', remark: '微信小程序AppSecret(用于wx.login换openid)' },
-    'wxpay_mchid': { v: '', remark: '微信支付商户号' },
-    'wxpay_api_v3_key': { v: '', remark: 'APIv3密钥(32位)' },
-    'wxpay_apiclient_serial': { v: '', remark: '商户API证书序列号' },
-    'wxpay_apiclient_key': { v: '', remark: '商户API私钥(apiclient_key.pem内容)' },
-    'wxpay_notify_url': { v: '', remark: '支付回调地址(公网https://域名/api/pay/notify)' },
-    'wxpay_platform_pub': { v: '', remark: '微信支付平台证书公钥(PEM,用于回调验签)' },
-    // 运行时动态写入的配置（补中文说明，避免后台参数页面只显示英文 key）
-    'group_price_tiers': { v: [], remark: '拼团分档配置(格式:人数:价格,逗号分隔)' },
-    'jwt_secret': { v: '', remark: 'JWT 签名密钥(服务端首次启动自动生成，请勿随意修改)' },
-    'last_daily_check_date': { v: '', remark: '上次每日考核日期' },
-    'last_settle_month': { v: '', remark: '上月待遇结算月份' },
-    'sensitive_words': { v: '', remark: '社区敏感词库(逗号分隔)' },
-  };
-  return s;
-}
-
-// 写入默认配置（存量库仅刷新 remark 说明文案，不覆盖用户已调整的 value）
-const insertSetting = db.prepare('INSERT INTO settings (key, value, remark) VALUES (?,?,?) ON CONFLICT(key) DO UPDATE SET remark=excluded.remark');
-for (const [k, o] of Object.entries(defaultSettings())) {
-  insertSetting.run(k, JSON.stringify({ v: o.v }), o.remark);
-}
-
-// 默认管理员（确保 users 表和 admin_auth 表都有记录）
-const bcrypt = require('bcryptjs');
-const adminHash = bcrypt.hashSync('admin123', 10);
-// 先确保 admin_auth 表存在
-db.exec(`CREATE TABLE IF NOT EXISTS admin_auth (id INTEGER PRIMARY KEY, username TEXT UNIQUE, password_hash TEXT, status INTEGER DEFAULT 1)`);
-// 存量库迁移：admin_auth 可能已存在（无 status 列），ensureColumn 补充，避免鉴权查询报错
-ensureColumn('admin_auth', 'status', `status INTEGER DEFAULT 1`);
-
-// ---------- 安全加固：点赞去重表 + 打卡去重唯一索引 + 常用查询索引 ----------
-db.exec(`CREATE TABLE IF NOT EXISTS post_likes (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  post_id INTEGER NOT NULL,
-  user_id INTEGER NOT NULL,
-  created_at TEXT DEFAULT (datetime('now','localtime')),
-  UNIQUE(post_id, user_id)
-)`);
-// 打卡去重：先清理存量重复记录，再建唯一索引（并发重复打卡靠唯一约束兜底）
-try {
-  db.exec(`DELETE FROM checkins WHERE id NOT IN (SELECT MIN(id) FROM checkins GROUP BY user_id, date, task_type)`);
-  db.exec(`CREATE UNIQUE INDEX IF NOT EXISTS idx_checkins_uniq ON checkins (user_id, date, task_type)`);
-} catch (e) { /* 表不存在或清理失败时忽略 */ }
-// 高频查询索引（数据量增长后避免全表扫描）
-try {
-  db.exec(`CREATE INDEX IF NOT EXISTS idx_orders_user ON orders (user_id)`);
-  db.exec(`CREATE INDEX IF NOT EXISTS idx_orders_status ON orders (status)`);
-  db.exec(`CREATE INDEX IF NOT EXISTS idx_trainees_leader ON trainees (leader_id)`);
-  db.exec(`CREATE INDEX IF NOT EXISTS idx_comm_referrer ON direct_commissions (referrer_id, status)`);
-  db.exec(`CREATE INDEX IF NOT EXISTS idx_notices_user ON notices (user_id)`);
-  db.exec(`CREATE INDEX IF NOT EXISTS idx_posts_status ON posts (status)`);
-  db.exec(`CREATE INDEX IF NOT EXISTS idx_group_members ON group_members (group_id)`);
-  db.exec(`CREATE INDEX IF NOT EXISTS idx_la_leader ON leader_allowances (leader_id, month)`);
-  db.exec(`CREATE INDEX IF NOT EXISTS idx_hr_mentor ON help_rewards (mentor_id, status)`);
-  db.exec(`CREATE INDEX IF NOT EXISTS idx_withdraw_user ON withdrawals (user_id)`);
-  db.exec(`CREATE INDEX IF NOT EXISTS idx_coupon_flows ON coupon_flows (user_id)`);
-} catch (e) { /* 个别表缺失时忽略，不阻塞启动 */ }
-// users 表里没有管理员时创建/标记管理员
-const adminExists = db.prepare('SELECT id FROM users WHERE is_admin=1').get();
-if (!adminExists) {
-  const id1 = db.prepare('SELECT id FROM users WHERE id=1').get();
-  if (!id1) {
-    db.prepare(`INSERT INTO users (id, nickname, role, identity, is_admin, phone) VALUES (1,'超级管理员','admin','learner',1,'admin')`).run();
-  } else {
-    db.prepare(`UPDATE users SET is_admin=1, role='admin', nickname='超级管理员' WHERE id=1`).run();
-  }
-}
-// 首次初始化 admin 登录凭据：仅当表中无管理员时创建
-// 修复：原 INSERT OR REPLACE 会在每次服务重启时把管理员密码重置回默认值（安全后门），现改为只首次创建
-const adminAuthCount = db.prepare('SELECT COUNT(*) c FROM admin_auth').get().c;
-if (adminAuthCount === 0) {
-  db.prepare(`INSERT INTO admin_auth (id, username, password_hash, status) VALUES (1,?,?,1)`).run('admin', adminHash);
-  console.log('[init] 已创建默认管理员 admin/admin123，请登录后台后立即修改密码');
-}
-// 强制 WAL 落盘，确保初始化数据写入文件
-try { db.exec('PRAGMA wal_checkpoint(TRUNCATE)'); } catch (e) {}
-
-// 默认类目（简短名称，避免移动端 tab 换行/溢出）
-const catCount = db.prepare('SELECT COUNT(*) c FROM categories').get().c;
-if (catCount === 0) {
-  const insCat = db.prepare(`INSERT INTO categories (name, icon, sort) VALUES (?,?,?)`);
-  insCat.run('书法', '📚', 1);
-  insCat.run('文房', '🖌️', 2);
-  insCat.run('碑帖', '📜', 3);
-  insCat.run('活动', '🏕️', 4);
-} else {
-  // 迁移：把旧长名称同步为简化名称，保证已初始化过的数据库也能生效
-  const renameMap = { '书法课程': '书法', '文房四宝': '文房', '碑帖字帖': '碑帖', '活动夏令营': '活动' };
-  const upd = db.prepare(`UPDATE categories SET name=? WHERE name=?`);
-  for (const [oldName, newName] of Object.entries(renameMap)) {
-    try { upd.run(newName, oldName); } catch (e) {}
-  }
-}
-const catMap = {};
-for (const c of db.prepare('SELECT * FROM categories').all()) catMap[c.name] = c.id;
-
-// 默认帖子栏目分类（翰墨交流四个栏目，后台可增删改）
-const pcCount = db.prepare('SELECT COUNT(*) c FROM post_categories').get().c;
-if (pcCount === 0) {
+  created_at TEXT DEFAULT (datetime('now','local
+... [305 lines truncated] ...
+cCount === 0) {
   const insPc = db.prepare(`INSERT INTO post_categories (name, value, sort) VALUES (?,?,?)`);
   insPc.run('教培动态', 'company', 1);
   insPc.run('作品展示', 'works', 2);
   insPc.run('碑帖资料', 'material', 3);
   insPc.run('活动交流', 'activity', 4);
 }
-
 // 默认课程
 const courseCount = db.prepare('SELECT COUNT(*) c FROM courses').get().c;
 if (courseCount === 0) {
@@ -755,14 +395,12 @@ if (courseCount === 0) {
   ins.run('书法进阶班', '系统进阶+名师精讲', 1299, 1699, '2year', '1299', 'course', catMap['书法'] || null, '进阶技法训练，行书、隶书等字体进阶，作品创作指导。', 1, 3, '[]');
   ins.run('书法终身班', '一次付费终身学习', 2999, 3999, 'lifetime', '2999', 'course', catMap['书法'] || null, '终身会员，全部课程与后续更新，含线下工作坊。', 1, 3, '[]');
 }
-
 // 默认公司介绍
 const introCount = db.prepare('SELECT COUNT(*) c FROM company_intro').get().c;
 if (introCount === 0) {
   db.prepare(`INSERT INTO company_intro (title, content) VALUES ('为什么选择我们', ?)`)
     .run(`<h3>专业书法名师</h3><p>汇集资深书法教师团队，多年一线教学经验，因材施教。</p><h3>系统课程体系</h3><p>从零基础到进阶，科学分级课程，循序渐进。</p><h3>一对一作业点评</h3><p>每份作业专人批改，指出问题并示范改进。</p><h3>线上线下双模式</h3><p>线上直播互动 + 线下到店指导，灵活选择。</p>`);
 }
-
 // 默认规则公示
 const ruleCount = db.prepare('SELECT COUNT(*) c FROM rule_pages').get().c;
 if (ruleCount === 0) {
@@ -833,7 +471,6 @@ try {
     }
   }
 } catch (e) { /* 迁移失败不影响启动 */ }
-
 // ---------- 习题 / 练习模块 ----------
 db.exec(`
 -- 题库
@@ -872,7 +509,6 @@ CREATE TABLE IF NOT EXISTS practice_sessions (
   created_at TEXT DEFAULT (datetime('now','localtime'))
 );
 `);
-
 // 题库种子（幂等增量：按题目标题查重，每次服务启动自动补齐缺失题目，可重复运行）
 const insQ = db.prepare(`INSERT INTO questions (course_id, type, question, options, answer, analysis, sort) VALUES (?,?,?,?,?,?,?)`);
 const hasQ = db.prepare('SELECT 1 FROM questions WHERE question=?');
@@ -942,9 +578,8 @@ qSeed.forEach(s => {
   qInserted++;
 });
 if (qInserted) console.log('[init] 题库种子补齐 ' + qInserted + ' 道题（现有 ' + qSeed.length + ' 道）');
-
 // ========== 新增：加盟模块三张表 CREATE TABLE IF NOT EXISTS ==========
-  db.prepare(`
+db.prepare(`
 CREATE TABLE IF NOT EXISTS join_apply (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   user_id INTEGER NOT NULL,
@@ -967,7 +602,6 @@ CREATE TABLE IF NOT EXISTS join_apply (
   update_at DATETIME DEFAULT CURRENT_TIMESTAMP
 )
   `).run();
-
   db.prepare(`
 CREATE TABLE IF NOT EXISTS offline_shop (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -982,7 +616,6 @@ CREATE TABLE IF NOT EXISTS offline_shop (
   create_at DATETIME DEFAULT CURRENT_TIMESTAMP
 )
   `).run();
-
   db.prepare(`
 CREATE TABLE IF NOT EXISTS offline_book (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -994,7 +627,5 @@ CREATE TABLE IF NOT EXISTS offline_book (
   create_at DATETIME DEFAULT CURRENT_TIMESTAMP
 )
   `).run();
-  // ========== 加盟建表结束 ==========
-});
-
+// ========== 加盟建表结束 ==========
 module.exports = db;
